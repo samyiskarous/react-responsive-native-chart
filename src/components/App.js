@@ -1,11 +1,17 @@
+import styled from 'styled-components';
 import './App.css';
 import ReviewsScoreToTime from './charts-containers/ReviewsScoreToTime';
 
 function App() {
+
+  const AppDiv = styled.div`
+    padding: 5rem
+  `;
+
   return (
-    <div className="App">
+    <AppDiv className="App">
       <ReviewsScoreToTime/>
-    </div>
+    </AppDiv>
   );
 }
 
