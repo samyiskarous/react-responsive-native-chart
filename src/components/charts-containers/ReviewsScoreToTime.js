@@ -15,14 +15,22 @@ const ReviewsScoreToTime = () => {
                 x: 'Time',
                 y: "Score"
             }}
-            barsData={[
+            rawBarsData={[
                 {
                     x: 'Oct',
-                    y: 23
+                    y: 2
                 },
                 {
                     x: 'Nov',
-                    y: 4
+                    y: 5
+                },
+                {
+                    x: 'Dec',
+                    y: 11
+                },
+                {
+                    x: 'Jan',
+                    y: 17
                 },
             ]}
         />
