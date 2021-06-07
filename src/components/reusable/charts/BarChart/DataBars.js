@@ -74,8 +74,8 @@ const DataBar = styled.div`
     width: 2rem;
     background-color: #696868;
     position: relative;
-    border-top-right-radius: 15%;
-    border-top-left-radius: 15%;
+    border-top-right-radius: 0.5rem;
+    border-top-left-radius: 0.5rem;
 
     margin-left: 0.5rem;
 
