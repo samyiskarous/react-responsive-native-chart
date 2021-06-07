@@ -40,8 +40,8 @@ const AxisYContainer = styled.div({
     transform: 'translate(-100%)',
 
     // To start at position 0 on the graph
-    position: 'relative',
-    top: 14
+    // position: 'relative',
+    // top: 14
 });
 
 const ValuesList = styled.ul({
@@ -67,7 +67,7 @@ const ListItemValue = styled.span({
 })
 const ListItemIndicator = styled.span({
     fontSize: '25px',
-    paddingLeft: '15%'
+    paddingLeft: '0.7rem'
 })
 // END: Styled Components
 

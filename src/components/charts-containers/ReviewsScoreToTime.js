@@ -29,15 +29,67 @@ const ReviewsScoreToTime = () => {
                         y: 2
                     },
                     {
-                        x: 'Dec',
-                        y: 5
+                        x: 'Jan',
+                        y: 15
                     },
                     {
                         x: 'Jan',
                         y: 7
                     },
+                    {
+                        x: 'Jan',
+                        y: 18
+                    },
+                    {
+                        x: 'Dec',
+                        y: 5
+                    },
+                    {
+                        x: 'Jan',
+                        y: 9
+                    },
+                    {
+                        x: 'Jan',
+                        y: 11
+                    },
+                    {
+                        x: 'Jan',
+                        y: 15
+                    },
+                    {
+                        x: 'Jan',
+                        y: 7
+                    },
+                    {
+                        x: 'Jan',
+                        y: 18
+                    },
+                    {
+                        x: 'Oct',
+                        y: 13
+                    },
+                    {
+                        x: 'Nov',
+                        y: 2
+                    },
+                    {
+                        x: 'Jan',
+                        y: 15
+                    },
+                    {
+                        x: 'Jan',
+                        y: 15
+                    },
+                    {
+                        x: 'Jan',
+                        y: 7
+                    },
+                    {
+                        x: 'Jan',
+                        y: 18
+                    },
                 ]}
-                size={300}
+                size={500}
             />
         </ReviewScoreToTimeDiv>
     );

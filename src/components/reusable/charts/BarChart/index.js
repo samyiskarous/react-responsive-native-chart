@@ -49,8 +49,8 @@ const BarChart = (props) => {
 const BarChartContainerDiv = styled.div({
     height: `fit-content`,
     width: props => props.size ? `${props.size/16}rem` : '',
-    borderLeft: `2px solid black`,
-    borderBottom: `2px solid black`,
+    borderLeft: `5px solid black`,
+    borderBottom: `5px solid black`,
     borderBottomLeftRadius: 10,
     position: 'relative'
 });

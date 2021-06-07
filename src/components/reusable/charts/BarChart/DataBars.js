@@ -51,20 +51,30 @@ const DataBarsContainer = styled.div({
 const DataBar = styled.div`
     height: ${props => props.computedHeight ? `${props.computedHeight}%` : '100%'};
     width: 2rem;
-    background-color: gray;
+    background-color: #696868;
     position: relative;
 
-    &:first-child {
-        margin-left: ${SPACE_FROM_Y_AXIS};
-    }
+    margin-left: 0.5rem;
 
-    &::before {
-        content: ${props => props.rawHeight ? `"${props.rawHeight}"` : 'ssssssss'};
-        position: relative;
-        bottom: 1.2rem;
-        font-size: 13px;
-        color: gray;
+    &:hover{
+        &::before {
+            content: ${props => props.rawHeight ? `"${props.rawHeight}"` : 'ssssssss'};
+            position: absolute;
+            left: 97%;
+            width: 2rem;
+            font-size: 14px;
+            color: gray;
+
+            background-color: white;
+            border: 1px solid gray;
+            z-index: 10;
+
+        }
+        
+        cursor: pointer;
+        background-color: gray;
     }
+    
 `
 // END: Styled Components
 
