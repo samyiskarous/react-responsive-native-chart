@@ -54,7 +54,7 @@ const ReviewsScoreToTime = () => {
                     },
                     {
                         x: 'Jan',
-                        y: 15
+                        y: 64
                     },
                     {
                         x: 'Jan',

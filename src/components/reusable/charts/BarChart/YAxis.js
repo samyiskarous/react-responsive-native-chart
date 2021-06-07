@@ -1,12 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const AxisY = (props) => {
+const YAxis = (props) => {
 
-    const {axisValues} = props;
+    const {label, axisValues} = props;
 
     return (
-        <AxisYContainer>
+        <YAxisContainer>
+            <LabelWrapper>
+                <Label>{label}</Label>
+            </LabelWrapper>
             <ValuesList>
                 {axisValues.map((value, index) => {
                     return (
@@ -27,14 +30,14 @@ const AxisY = (props) => {
                         </ListItemData>
                     </ValuesListItem>
             </ValuesList>
-        </AxisYContainer>
+        </YAxisContainer>
     );
 }
 
 // START: Styled Components
-const AxisYContainer = styled.div({
+const YAxisContainer = styled.div({
     height: '100%',
-    width: '30%',
+    width: '25%',
     backgroundColor: 'transparent',
 
     transform: 'translate(-100%)',
@@ -69,6 +72,20 @@ const ListItemIndicator = styled.span({
     fontSize: '25px',
     paddingLeft: '0.7rem'
 })
+
+const LabelWrapper = styled.div({
+    transform: 'rotate(-90deg)',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    position: 'absolute',
+    bottom: '50%'
+})
+const Label = styled.span({
+    opacity: 0.2,
+    letterSpacing: '1rem',
+    fontSize: '24px'
+});
 // END: Styled Components
 
-export default AxisY;
+export default YAxis;

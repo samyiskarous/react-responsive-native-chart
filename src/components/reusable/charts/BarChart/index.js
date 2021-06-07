@@ -1,10 +1,10 @@
 import react from 'react';
 import PropTypes from 'prop-types'
 import styled from 'styled-components';
-import AxisY from './AxisY';
+import YAxis from './YAxis';
 import DataBars from './DataBars';
 
-const AXIS_VALUES_COUNT = 10;
+const AXIS_VALUES_COUNT = 14;
 
 const BarChart = (props) => {
     BarChart.propTypes = {
@@ -34,14 +34,13 @@ const BarChart = (props) => {
     return (
         <>
             <BarChartContainerDiv size={size}>
-                <AxisY axisValues={yAxisValues}/>
-            
+                <YAxis label={labels.y} axisValues={yAxisValues}/>
                     <DataBars 
                         barsHeightData={computedBarsHeightData}
                         maxHeightPercentageToPeak={maxPercentageToPeak}
                         heightPortions={AXIS_VALUES_COUNT+1}
                     />
-                <AxisX/>
+                <AxisX label={labels.x}/>
             </BarChartContainerDiv>
         </>
     );
