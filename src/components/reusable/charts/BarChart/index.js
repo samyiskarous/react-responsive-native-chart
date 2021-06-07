@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import AxisY from './AxisY';
 import DataBars from './DataBars';
 
-const AXIS_VALUES_COUNT = 16;
+const AXIS_VALUES_COUNT = 10;
 
 const BarChart = (props) => {
     BarChart.propTypes = {
@@ -90,13 +90,12 @@ const computeAxisValuesFromRawAxisData = (rawAxisData) => {
     let axisValues = [];
 
     const roundedHighestValue = Math.ceil(Math.max(...rawAxisData) / 10) * 10;
-
     const incrementBy = roundedHighestValue / AXIS_VALUES_COUNT;
 
     for(let axisValue = incrementBy; 
             axisValue <= roundedHighestValue; 
             axisValue += incrementBy){
-        axisValues.push(axisValue);
+        axisValues.push(Math.round(axisValue * 10) / 10);
     }
 
     // reversed to show the Y-axis value in Asc order.

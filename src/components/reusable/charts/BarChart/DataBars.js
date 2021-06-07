@@ -74,6 +74,8 @@ const DataBar = styled.div`
     width: 2rem;
     background-color: #696868;
     position: relative;
+    border-top-right-radius: 15%;
+    border-top-left-radius: 15%;
 
     margin-left: 0.5rem;
 
@@ -82,13 +84,17 @@ const DataBar = styled.div`
             content: ${props => props.rawHeight ? `"${props.rawHeight}"` : 'ssssssss'};
             position: absolute;
             left: 97%;
+            border-top-left-radius: 50%;
+            border-bottom-right-radius: 20%;
             width: 2rem;
             font-size: 14px;
-            color: gray;
-
+            
+            color: black;
             background-color: white;
+
             border: 1px solid gray;
             z-index: 10;
+
 
         }
         cursor: pointer;
