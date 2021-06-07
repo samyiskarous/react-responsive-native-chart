@@ -2,9 +2,9 @@ import react from 'react';
 import PropTypes from 'prop-types'
 import styled from 'styled-components';
 import AxisY from './AxisY';
+import DataBars from './DataBars';
 
 const AXIS_VALUES_COUNT = 10;
-const SPACE_FROM_Y_AXIS = '1rem';
 
 const BarChart = (props) => {
     BarChart.propTypes = {
@@ -18,82 +18,72 @@ const BarChart = (props) => {
         })).isRequired,
         showYAxisValues: PropTypes.bool,
         size: PropTypes.number,
-
     }
 
     const {labels, rawBarsData, size, showYAxisValues = false} = props;
 
-    const axisRawValues = extractAxisRawData(rawBarsData, 'y');
+    const yAxisRawValues = extractAxisRawData(rawBarsData, 'y');
+    const maxPercentageToPeak = getPercentageOfHighestNumberToItsCeiledValue(yAxisRawValues)
 
-    const yAxisValues = computeAxisValuesFromRawAxisData(axisRawValues);
+    const yAxisValues = computeAxisValuesFromRawAxisData(yAxisRawValues);
 
     const xAxisValues = extractAxisRawData(rawBarsData, 'x');
-    
-    const BarChartContainerDiv = styled.div({
-        // maxHeight: '100%',
-        height: `fit-content`,
-        width: `${size/16}rem`,
-        borderLeft: `2px solid black`,
-        borderBottom: `2px solid black`,
-        borderBottomLeftRadius: 10,
-        position: 'relative'
-    });
 
-    const DataBarsContainer = styled.div({
-        
-        display: 'flex',
-        justifyContent: 'space-between',
-        // To start the bars from the bottom
-        alignItems: 'flex-end',
-
-        height: '91%',
-        width: '100%',
-
-        position: 'absolute',
-        bottom: '0',
-    });
-
-    const DataBar = styled.div({
-        height: props => props.height ? `${props.height}%` : '100%',
-        width: '1rem',
-        backgroundColor: 'blue',
-        position: 'relative',
-
-        ":first-child":{
-            marginLeft: SPACE_FROM_Y_AXIS
-        }
-    })
-
-    const AxisX = styled.div({
-        width: '100%',
-        height: '10%',
-        backgroundColor: 'transparent',
-    });
+    const computedBarsHeight = computeBarsHeightFromRawValues(yAxisRawValues);
     
     return (
         <>
-            <BarChartContainerDiv>
+            <BarChartContainerDiv size={size}>
                 <AxisY axisValues={yAxisValues}/>
-                <DataBarsContainer>
-                    <DataBar height={40}/>
-                    <DataBar height={80}/>
-                    <DataBar height={70}/>
-                    <DataBar height={100}/>
-                </DataBarsContainer>
+                <DataBars barsHeightData={{
+                    barsHeight: computedBarsHeight,
+                    maxPercentageToPeak: maxPercentageToPeak
+                }}/>
                 <AxisX/>
             </BarChartContainerDiv>
         </>
     );
 }
 
-// Used to convert "numeric" random data (2-3-7-18-14) to Axis Values (5-10-15-20...etc)
-export const computeAxisValuesFromRawAxisData = (rawAxisData) => {
+// START: Styled Components
+const BarChartContainerDiv = styled.div({
+    height: `fit-content`,
+    width: props => props.size ? `${props.size/16}rem` : '',
+    borderLeft: `2px solid black`,
+    borderBottom: `2px solid black`,
+    borderBottomLeftRadius: 10,
+    position: 'relative'
+});
+
+const AxisX = styled.div({
+    width: '100%',
+    height: '10%',
+    backgroundColor: 'transparent',
+});
+// END: Styled Components
+
+const computeBarsHeightFromRawValues = (barsRawValues) => {
+    const heighestBarValue = Math.max(...barsRawValues);
+
+    const computedBarsHeight = barsRawValues.map((barRawValue) => {
+        return (barRawValue / heighestBarValue) * 100;
+    })
+
+    return computedBarsHeight;
+}
+
+const getPercentageOfHighestNumberToItsCeiledValue = (rawAxisData) => {
+    const heighestRawValue = Math.max(...rawAxisData);
+    const heighestRoundedValue = Math.ceil(heighestRawValue/10) * 10;
+
+    return (heighestRawValue / heighestRoundedValue) * 100;;
+}
+
+// Used to convert "numeric" random data (2-3-7-18-14) to Axis Values (5-10-15-20)
+const computeAxisValuesFromRawAxisData = (rawAxisData) => {
     let axisValues = [];
 
-    // Sort Desc
-    const sortedAxisRawValues = rawAxisData.sort((a,b) => b-a);
-
-    const roundedHighestValue = Math.ceil(sortedAxisRawValues[0] / 10) * 10;
+    const roundedHighestValue = Math.ceil(Math.max(...rawAxisData) / 10) * 10;
 
     const incrementBy = roundedHighestValue / AXIS_VALUES_COUNT;
 
@@ -103,6 +93,7 @@ export const computeAxisValuesFromRawAxisData = (rawAxisData) => {
         axisValues.push(axisValue);
     }
 
+    // reversed to show the Y-axis value in Asc order.
     return axisValues.reverse();
 }
 

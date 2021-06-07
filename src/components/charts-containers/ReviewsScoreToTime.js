@@ -7,22 +7,6 @@ const ReviewsScoreToTime = () => {
     const [endDate, setEndData] = useState(new Date());
     const [reviewsScoreToTimeBarData] = useState([]);
             
-    const ReviewScoreToTimeDiv = styled.div({
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        width: '100%'
-    });
-
-    const DatesRangeDiv = styled.div({
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-
-        width: '30%'
-    });
-
     return (
         <ReviewScoreToTimeDiv>
             <DatesRangeDiv>
@@ -38,19 +22,19 @@ const ReviewsScoreToTime = () => {
                 rawBarsData={[
                     {
                         x: 'Oct',
-                        y: 2
+                        y: 13
                     },
                     {
                         x: 'Nov',
-                        y: 5
+                        y: 2
                     },
                     {
                         x: 'Dec',
-                        y: 11
+                        y: 5
                     },
                     {
                         x: 'Jan',
-                        y: 17
+                        y: 7
                     },
                 ]}
                 size={300}
@@ -58,5 +42,24 @@ const ReviewsScoreToTime = () => {
         </ReviewScoreToTimeDiv>
     );
 }
+
+
+// START: Styled Components
+const ReviewScoreToTimeDiv = styled.div({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%'
+});
+
+const DatesRangeDiv = styled.div({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+
+    width: '30%'
+});
+// END: Styled Components
 
 export default ReviewsScoreToTime;
