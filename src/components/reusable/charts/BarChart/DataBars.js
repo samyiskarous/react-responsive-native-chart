@@ -9,13 +9,13 @@ const DataBars = (props) => {
      * we need to specify the height percentage of that highest value to its 
      * rounded value, to have a precise bar height.
      */
-    const {barsHeightData, maxHeightPercentageToPeak} = props;
+    const {barsHeightData, maxHeightPercentageToPeak, heightPortions} = props;
 
     /**
      * It's the top area of the Y-axis, it always stays the same size and proportion
      * to the rest, no matter how many values we have on the Y-axis
      */
-    const extraHeight = 100 / 11;
+    const extraHeight = 100 / heightPortions;
 
     const correctedFullHeight = 100 - extraHeight; 
 

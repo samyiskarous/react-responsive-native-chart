@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import AxisY from './AxisY';
 import DataBars from './DataBars';
 
-const AXIS_VALUES_COUNT = 10;
+const AXIS_VALUES_COUNT = 16;
 
 const BarChart = (props) => {
     BarChart.propTypes = {
@@ -39,6 +39,7 @@ const BarChart = (props) => {
                     <DataBars 
                         barsHeightData={computedBarsHeightData}
                         maxHeightPercentageToPeak={maxPercentageToPeak}
+                        heightPortions={AXIS_VALUES_COUNT+1}
                     />
                 <AxisX/>
             </BarChartContainerDiv>
