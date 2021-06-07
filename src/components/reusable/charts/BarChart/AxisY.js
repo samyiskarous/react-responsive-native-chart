@@ -40,8 +40,8 @@ const AxisYContainer = styled.div({
     transform: 'translate(-100%)',
 
     // To start at position 0 on the graph
-    // position: 'relative',
-    // top: 14
+    position: 'relative',
+    top: 14
 });
 
 const ValuesList = styled.ul({
