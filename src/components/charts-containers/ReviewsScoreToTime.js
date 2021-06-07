@@ -22,7 +22,7 @@ const ReviewsScoreToTime = () => {
                 rawBarsData={[
                     {
                         x: 'Oct',
-                        y: 13
+                        y: 31
                     },
                     {
                         x: 'Nov',
@@ -30,15 +30,15 @@ const ReviewsScoreToTime = () => {
                     },
                     {
                         x: 'Jan',
-                        y: 15
+                        y: 40
                     },
                     {
                         x: 'Jan',
-                        y: 7
+                        y: 41
                     },
                     {
                         x: 'Jan',
-                        y: 18
+                        y: 25
                     },
                     {
                         x: 'Dec',
@@ -61,33 +61,21 @@ const ReviewsScoreToTime = () => {
                         y: 7
                     },
                     {
-                        x: 'Jan',
-                        y: 18
-                    },
-                    {
                         x: 'Oct',
                         y: 13
                     },
                     {
-                        x: 'Nov',
-                        y: 2
+                        x: 'Jan',
+                        y: 11
                     },
                     {
                         x: 'Jan',
-                        y: 15
-                    },
-                    {
-                        x: 'Jan',
-                        y: 15
+                        y: 22
                     },
                     {
                         x: 'Jan',
                         y: 7
-                    },
-                    {
-                        x: 'Jan',
-                        y: 18
-                    },
+                    }
                 ]}
                 size={500}
             />

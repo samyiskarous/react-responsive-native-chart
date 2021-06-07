@@ -41,7 +41,7 @@ const AxisYContainer = styled.div({
 
     // To start at position 0 on the graph
     position: 'relative',
-    top: 14
+    top: '0.92rem'
 });
 
 const ValuesList = styled.ul({
@@ -55,7 +55,7 @@ const ValuesList = styled.ul({
 });
 
 const ValuesListItem = styled.li({
-    opacity: props => props.transparent ? 0 : 1
+    opacity: props => props.transparent ? 0 : 1,
 });
 const ListItemData = styled.span({
     display: 'flex',

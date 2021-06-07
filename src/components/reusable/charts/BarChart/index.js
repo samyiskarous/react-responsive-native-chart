@@ -35,10 +35,11 @@ const BarChart = (props) => {
         <>
             <BarChartContainerDiv size={size}>
                 <AxisY axisValues={yAxisValues}/>
-                <DataBars 
-                    barsHeightData={computedBarsHeightData}
-                    maxPercentageToPeak={maxPercentageToPeak}
-                />
+            
+                    <DataBars 
+                        barsHeightData={computedBarsHeightData}
+                        maxHeightPercentageToPeak={maxPercentageToPeak}
+                    />
                 <AxisX/>
             </BarChartContainerDiv>
         </>
@@ -78,8 +79,9 @@ const computeBarsHeightFromRawValues = (barsRawValues) => {
 const getPercentageOfHighestNumberToItsCeiledValue = (rawAxisData) => {
     const heighestRawValue = Math.max(...rawAxisData);
     const heighestRoundedValue = Math.ceil(heighestRawValue/10) * 10;
-
-    return (heighestRawValue / heighestRoundedValue) * 100;;
+    return heighestRawValue === heighestRoundedValue 
+            ? 100 
+            : (heighestRawValue / heighestRoundedValue) * 100;
 }
 
 // Used to convert "numeric" random data (2-3-7-18-14) to Axis Values (5-10-15-20)

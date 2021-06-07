@@ -1,31 +1,38 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const SPACE_FROM_Y_AXIS = '1rem';
-
-// This 91% is to make the top end of the bar matches with the highest 
-// Y-axis value indicator 
-// (It won't change as the values increase. Same percentage tested.)
-// So, this 91% the 100% container of the highest bar value 
-const COMPENSATION_HEIGHT_PERCENTAGE = 91;
-
 const DataBars = (props) => {
 
-    const {barsHeightData, maxPercentageToPeak} = props;
+    /**
+     * (maxPercentageToPeak)
+     * Since we rounded up the highest Y-axis value, for better UX,
+     * we need to specify the height percentage of that highest value to its 
+     * rounded value, to have a precise bar height.
+     */
+    const {barsHeightData, maxHeightPercentageToPeak} = props;
 
-    const highestBarPercentageToFullHeight = (maxPercentageToPeak / 10) * (COMPENSATION_HEIGHT_PERCENTAGE / 10);
+    /**
+     * It's the top area of the Y-axis, it always stays the same size and proportion
+     * to the rest, no matter how many values we have on the Y-axis
+     */
+    const extraHeight = 100 / 11;
+
+    const correctedFullHeight = 100 - extraHeight; 
 
     return (
-        <DataBarsContainer highestBarPercentageToFullHeight={highestBarPercentageToFullHeight}>
-            {barsHeightData.map((barHeight, index) => {
-                return (
-                    <DataBar 
+        <DataBarsContainer correctedFullHeight={correctedFullHeight}>
+            {/* To limit the height in case our highest value isn't equal to its rounded one */}
+            <HeightPercentageLimiter maxHeightPercentageToPeak={maxHeightPercentageToPeak}>
+                {barsHeightData.map((barHeight, index) => {
+                    return (
+                        <DataBar 
                         key={index} 
                         computedHeight={barHeight.computed}
                         rawHeight={barHeight.raw}
-                    />
-                );
-            })}
+                        />
+                        );
+                    })}
+            </HeightPercentageLimiter>
         </DataBarsContainer>
     );
 }
@@ -33,19 +40,33 @@ const DataBars = (props) => {
 
 // START: Styled Components
 const DataBarsContainer = styled.div({
-        
+
     display: 'flex',
     justifyContent: 'space-between',
     // To start the bars from the bottom
     alignItems: 'flex-end',
-
-    
-    height: props => props.highestBarPercentageToFullHeight 
-                        ? `${props.highestBarPercentageToFullHeight}%` : '',
     width: '100%',
+    
+    height: props => props.correctedFullHeight 
+                    ? `${props.correctedFullHeight}%` 
+                    : '',
 
     position: 'absolute',
-    bottom: '0',
+    bottom: 0,
+});
+
+const HeightPercentageLimiter = styled.div({
+    display: 'inherit',
+    justifyContent: 'inherit',
+    alignItems: 'inherit',
+ 
+    width: '100%',
+    height: props => props.maxHeightPercentageToPeak
+                    ? `${props.maxHeightPercentageToPeak}%` 
+                    : '',
+ 
+    position: 'absolute',
+    bottom: 0,
 });
 
 const DataBar = styled.div`
@@ -70,7 +91,6 @@ const DataBar = styled.div`
             z-index: 10;
 
         }
-        
         cursor: pointer;
         background-color: gray;
     }
