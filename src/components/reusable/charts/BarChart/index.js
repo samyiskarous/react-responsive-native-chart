@@ -3,7 +3,8 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components';
 import AxisY from './AxisY';
 
-const AXIS_VALUES_COUNT = 20;
+const AXIS_VALUES_COUNT = 10;
+const SPACE_FROM_Y_AXIS = '1rem';
 
 const BarChart = (props) => {
     BarChart.propTypes = {
@@ -35,7 +36,33 @@ const BarChart = (props) => {
         borderLeft: `2px solid black`,
         borderBottom: `2px solid black`,
         borderBottomLeftRadius: 10,
+        position: 'relative'
     });
+
+    const DataBarsContainer = styled.div({
+        
+        display: 'flex',
+        justifyContent: 'space-between',
+        // To start the bars from the bottom
+        alignItems: 'flex-end',
+
+        height: '91%',
+        width: '100%',
+
+        position: 'absolute',
+        bottom: '0',
+    });
+
+    const DataBar = styled.div({
+        height: props => props.height ? `${props.height}%` : '100%',
+        width: '1rem',
+        backgroundColor: 'blue',
+        position: 'relative',
+
+        ":first-child":{
+            marginLeft: SPACE_FROM_Y_AXIS
+        }
+    })
 
     const AxisX = styled.div({
         width: '100%',
@@ -47,10 +74,13 @@ const BarChart = (props) => {
         <>
             <BarChartContainerDiv>
                 <AxisY axisValues={yAxisValues}/>
-
-                <AxisX>
-
-                </AxisX>
+                <DataBarsContainer>
+                    <DataBar height={40}/>
+                    <DataBar height={80}/>
+                    <DataBar height={70}/>
+                    <DataBar height={100}/>
+                </DataBarsContainer>
+                <AxisX/>
             </BarChartContainerDiv>
         </>
     );

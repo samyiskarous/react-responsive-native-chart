@@ -58,7 +58,7 @@ const AxisY = (props) => {
                     
                 })}
 
-                    <ValuesListItem transparent>
+                    <ValuesListItem>
                         <ListItemData>
                             <ListItemValue>0</ListItemValue>
                             <ListItemIndicator>-</ListItemIndicator>
