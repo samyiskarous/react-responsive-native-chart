@@ -11,15 +11,19 @@ const COMPENSATION_HEIGHT_PERCENTAGE = 91;
 
 const DataBars = (props) => {
 
-    const {barsHeightData} = props;
-    const {maxPercentageToPeak, barsHeight} = barsHeightData;
+    const {barsHeightData, maxPercentageToPeak} = props;
+
     const highestBarPercentageToFullHeight = (maxPercentageToPeak / 10) * (COMPENSATION_HEIGHT_PERCENTAGE / 10);
 
     return (
         <DataBarsContainer highestBarPercentageToFullHeight={highestBarPercentageToFullHeight}>
-            {barsHeight.map((barHeight, index) => {
+            {barsHeightData.map((barHeight, index) => {
                 return (
-                    <DataBar key={index} height={barHeight}/>
+                    <DataBar 
+                        key={index} 
+                        computedHeight={barHeight.computed}
+                        rawHeight={barHeight.raw}
+                    />
                 );
             })}
         </DataBarsContainer>
@@ -45,7 +49,7 @@ const DataBarsContainer = styled.div({
 });
 
 const DataBar = styled.div`
-    height: ${props => props.height ? `${props.height}%` : '100%'};
+    height: ${props => props.computedHeight ? `${props.computedHeight}%` : '100%'};
     width: 2rem;
     background-color: gray;
     position: relative;
@@ -55,7 +59,7 @@ const DataBar = styled.div`
     }
 
     &::before {
-        content: 's';
+        content: ${props => props.rawHeight ? `"${props.rawHeight}"` : 'ssssssss'};
         position: relative;
         bottom: 1.2rem;
         font-size: 13px;

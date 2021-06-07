@@ -29,16 +29,16 @@ const BarChart = (props) => {
 
     const xAxisValues = extractAxisRawData(rawBarsData, 'x');
 
-    const computedBarsHeight = computeBarsHeightFromRawValues(yAxisRawValues);
+    const computedBarsHeightData = computeBarsHeightFromRawValues(yAxisRawValues);
     
     return (
         <>
             <BarChartContainerDiv size={size}>
                 <AxisY axisValues={yAxisValues}/>
-                <DataBars barsHeightData={{
-                    barsHeight: computedBarsHeight,
-                    maxPercentageToPeak: maxPercentageToPeak
-                }}/>
+                <DataBars 
+                    barsHeightData={computedBarsHeightData}
+                    maxPercentageToPeak={maxPercentageToPeak}
+                />
                 <AxisX/>
             </BarChartContainerDiv>
         </>
@@ -66,7 +66,10 @@ const computeBarsHeightFromRawValues = (barsRawValues) => {
     const heighestBarValue = Math.max(...barsRawValues);
 
     const computedBarsHeight = barsRawValues.map((barRawValue) => {
-        return (barRawValue / heighestBarValue) * 100;
+        return {
+            raw: barRawValue,
+            computed: (barRawValue / heighestBarValue) * 100
+        };
     })
 
     return computedBarsHeight;
