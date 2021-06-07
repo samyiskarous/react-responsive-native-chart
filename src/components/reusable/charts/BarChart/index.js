@@ -1,8 +1,9 @@
 import react from 'react';
 import PropTypes from 'prop-types'
 import styled from 'styled-components';
+import AxisY from './AxisY';
 
-const AXIS_VALUES_COUNT = 10;
+const AXIS_VALUES_COUNT = 20;
 
 const BarChart = (props) => {
     BarChart.propTypes = {
@@ -28,74 +29,24 @@ const BarChart = (props) => {
     const xAxisValues = extractAxisRawData(rawBarsData, 'x');
     
     const BarChartContainerDiv = styled.div({
-        height: `${size/16}rem`,
+        // maxHeight: '100%',
+        height: `fit-content`,
         width: `${size/16}rem`,
-        borderLeft: `3px solid black`,
-        borderBottom: `3px solid black`,
-        borderBottomLeftRadius: 10
+        borderLeft: `2px solid black`,
+        borderBottom: `2px solid black`,
+        borderBottomLeftRadius: 10,
     });
-    const AxisY = styled.div({
-        height: '100%',
-        width: '30%',
-        backgroundColor: 'transparent',
 
-        transform: 'translate(-100%)'
-    });
     const AxisX = styled.div({
         width: '100%',
         height: '10%',
         backgroundColor: 'transparent',
     });
-    const AxisXList = styled.ul({
-        listStyleType: 'none',
-        paddingLeft: 0,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        height: '100%',
-        margin: 0,
-        position: 'relative',
-        top: '3%'
-    });
-
-    const AxisXListItem = styled.li({
-        opacity: props => props.transparent ? 0 : 1
-    });
-
-    const ListItemData = styled.span({
-        display: 'flex',
-        alignItems: 'center',
-    })
-
-    const ListItemValue = styled.span({
-        width: '100%',
-        textAlign: 'right'
-    })
-
-    const ListItemIndicator = styled.span({
-        fontSize: '25px',
-        paddingLeft: '15%'
-    })
+    
     return (
         <>
             <BarChartContainerDiv>
-                <AxisY>
-                    <AxisXList>
-                        {yAxisValues.map((value, index) => {
-                            return (
-                                <AxisXListItem>
-                                    <ListItemData>
-                                        <ListItemValue>{value}</ListItemValue>
-                                        <ListItemIndicator>-</ListItemIndicator>
-                                    </ListItemData>
-                                </AxisXListItem>
-                            )
-
-                        })}
-
-                        <AxisXListItem transparent><span>0&nbsp;&nbsp;-</span></AxisXListItem>
-                    </AxisXList>
-                </AxisY>
+                <AxisY axisValues={yAxisValues}/>
 
                 <AxisX>
 
