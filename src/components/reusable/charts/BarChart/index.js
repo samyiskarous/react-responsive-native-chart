@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components';
 import YAxis from './YAxis';
 import DataBars from './DataBars';
+import XAxis from './XAxis';
 
 const AXIS_VALUES_COUNT = 14;
 
@@ -35,12 +36,12 @@ const BarChart = (props) => {
         <>
             <BarChartContainerDiv size={size}>
                 <YAxis label={labels.y} axisValues={yAxisValues}/>
-                    <DataBars 
-                        barsHeightData={computedBarsHeightData}
-                        maxHeightPercentageToPeak={maxPercentageToPeak}
-                        heightPortions={AXIS_VALUES_COUNT+1}
-                    />
-                <AxisX label={labels.x}/>
+                <DataBars 
+                    barsHeightData={computedBarsHeightData}
+                    maxHeightPercentageToPeak={maxPercentageToPeak}
+                    heightPortions={AXIS_VALUES_COUNT+1}
+                />
+                <XAxis label={labels.x}/>
             </BarChartContainerDiv>
         </>
     );
@@ -53,13 +54,7 @@ const BarChartContainerDiv = styled.div({
     borderLeft: `5px solid black`,
     borderBottom: `5px solid black`,
     borderBottomLeftRadius: 10,
-    position: 'relative'
-});
-
-const AxisX = styled.div({
-    width: '100%',
-    height: '10%',
-    backgroundColor: 'transparent',
+    position: 'relative',
 });
 // END: Styled Components
 

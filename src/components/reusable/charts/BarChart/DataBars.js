@@ -85,7 +85,8 @@ const DataBar = styled.div`
             position: absolute;
             left: 97%;
             border-top-left-radius: 50%;
-            border-bottom-right-radius: 20%;
+            border-top-right-radius: 10%;
+            border-bottom-right-radius: 10%;
             width: 2rem;
             font-size: 14px;
             

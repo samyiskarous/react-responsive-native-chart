@@ -81,8 +81,8 @@ const LabelWrapper = styled.div({
     position: 'absolute',
     bottom: '50%'
 })
-const Label = styled.span({
-    opacity: 0.2,
+export const Label = styled.span({
+    opacity: 0.3,
     letterSpacing: '1rem',
     fontSize: '24px'
 });
