@@ -89,7 +89,7 @@ const DataBar = styled.div`
             width: 2rem;
             font-size: 14px;
             
-            color: black;
+            color: gray;
             background-color: white;
 
             border: 1px solid gray;
