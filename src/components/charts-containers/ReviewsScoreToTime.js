@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import styled from 'styled-components';
 import BarChart from '../reusable/charts/BarChart';
 
 const ReviewsScoreToTime = () => {
@@ -6,11 +7,28 @@ const ReviewsScoreToTime = () => {
     const [endDate, setEndData] = useState(new Date());
     const [reviewsScoreToTimeBarData] = useState([]);
             
-    return (
-        <div>
-        {/* StartDate Date Picker */}
-        {/* EndDate Date Picker */}
+    const ReviewScoreToTimeDiv = styled.div({
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%'
+    });
 
+    const DatesRangeDiv = styled.div({
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+
+        width: '30%'
+    });
+
+    return (
+        <ReviewScoreToTimeDiv>
+            <DatesRangeDiv>
+                <p>Start Data</p>
+                <p>End Data</p>
+            </DatesRangeDiv>
 
             <BarChart 
                 labels={{
@@ -37,7 +55,7 @@ const ReviewsScoreToTime = () => {
                 ]}
                 size={300}
             />
-        </div>
+        </ReviewScoreToTimeDiv>
     );
 }
 

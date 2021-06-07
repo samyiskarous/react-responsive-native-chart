@@ -27,8 +27,6 @@ const BarChart = (props) => {
 
     const xAxisValues = extractAxisRawData(rawBarsData, 'x');
     
-    console.log(yAxisValues, xAxisValues)
-
     const BarChartContainerDiv = styled.div({
         height: `${size/16}rem`,
         width: `${size/16}rem`,
@@ -36,10 +34,9 @@ const BarChart = (props) => {
         borderBottom: `3px solid black`,
         borderBottomLeftRadius: 10
     });
-
     const AxisY = styled.div({
         height: '100%',
-        width: '10%',
+        width: '30%',
         backgroundColor: 'transparent',
 
         transform: 'translate(-100%)'
@@ -48,14 +45,56 @@ const BarChart = (props) => {
         width: '100%',
         height: '10%',
         backgroundColor: 'transparent',
-
+    });
+    const AxisXList = styled.ul({
+        listStyleType: 'none',
+        paddingLeft: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        height: '100%',
+        margin: 0,
+        position: 'relative',
+        top: '3%'
     });
 
+    const AxisXListItem = styled.li({
+        opacity: props => props.transparent ? 0 : 1
+    });
+
+    const ListItemData = styled.span({
+        display: 'flex',
+        alignItems: 'center',
+    })
+
+    const ListItemValue = styled.span({
+        width: '100%',
+        textAlign: 'right'
+    })
+
+    const ListItemIndicator = styled.span({
+        fontSize: '25px',
+        paddingLeft: '15%'
+    })
     return (
         <>
             <BarChartContainerDiv>
                 <AxisY>
+                    <AxisXList>
+                        {yAxisValues.map((value, index) => {
+                            return (
+                                <AxisXListItem>
+                                    <ListItemData>
+                                        <ListItemValue>{value}</ListItemValue>
+                                        <ListItemIndicator>-</ListItemIndicator>
+                                    </ListItemData>
+                                </AxisXListItem>
+                            )
 
+                        })}
+
+                        <AxisXListItem transparent><span>0&nbsp;&nbsp;-</span></AxisXListItem>
+                    </AxisXList>
                 </AxisY>
 
                 <AxisX>
@@ -70,20 +109,20 @@ const BarChart = (props) => {
 export const computeAxisValuesFromRawAxisData = (rawAxisData) => {
     let axisValues = [];
 
-    // Convert axis raw data to axis ranges
-    const sortedAxisRawValues = rawAxisData.sort((a,b) => a-b);
+    // Sort Desc
+    const sortedAxisRawValues = rawAxisData.sort((a,b) => b-a);
 
-    const roundedLastValue = Math.ceil(sortedAxisRawValues[sortedAxisRawValues.length-1] / 10) * 10;
+    const roundedHighestValue = Math.ceil(sortedAxisRawValues[0] / 10) * 10;
 
-    const incrementBy = roundedLastValue / AXIS_VALUES_COUNT;
+    const incrementBy = roundedHighestValue / AXIS_VALUES_COUNT;
 
-    for(let axisValue = 0; 
-            axisValue <= roundedLastValue; 
+    for(let axisValue = incrementBy; 
+            axisValue <= roundedHighestValue; 
             axisValue += incrementBy){
         axisValues.push(axisValue);
     }
 
-    return axisValues;
+    return axisValues.reverse();
 }
 
 // Used to get one axis data (may be used without sorting if needed)
