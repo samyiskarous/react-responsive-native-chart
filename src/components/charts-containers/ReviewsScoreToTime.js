@@ -20,7 +20,7 @@ const ReviewsScoreToTime = () => {
     const isMobileSize = useMediaQuery({
         query: '(max-width: 599px)'
     })
-    window.addEventListener("resize", ()=> console.log(window.innerWidth));
+
     useEffect(() => {
         if(isMobileSize){
             console.log('Mobile');
@@ -34,7 +34,7 @@ const ReviewsScoreToTime = () => {
             setTempReviewsScoreToTimeBarData(oldState => [...chartOriginalData]);
         }
     }, [])
-            
+   
     return (
         <ReviewScoreToTimeDiv>
             <DatesRangeDiv>
@@ -43,12 +43,12 @@ const ReviewsScoreToTime = () => {
             </DatesRangeDiv>
 
             <div style={{
-                width: '100%',
-                height: '100%'
+                width: '60%',
+                height: '25rem'
             }}>
                 <BarChart 
                     labels={{
-                        x: 'Time',
+                        x: "Time",
                         y: "Score"
                     }}
                     rawBarsData={tempReviewsScoreToTimeBarData}

@@ -9,18 +9,14 @@ const DataBars = (props) => {
      * we need to specify the height percentage of that highest value to its 
      * rounded value, to have a precise bar height.
      */
-    const {barsHeightData, maxHeightPercentageToPeak, heightPortions} = props;
+    const {barsHeightData, maxHeightPercentageToPeak, highestPossibleHeight} = props;
 
     /**
      * It's the top area of the Y-axis, it always stays the same size and proportion
      * to the rest, no matter how many values we have on the Y-axis
      */
-    const extraHeight = 100 / heightPortions;
-
-    const correctedFullHeight = 100 - extraHeight; 
-
     return (
-        <DataBarsContainer correctedFullHeight={correctedFullHeight}>
+        <DataBarsContainer highestPossibleHeight={highestPossibleHeight}>
             {/* To limit the height in case our highest value isn't equal to its rounded one */}
             <HeightPercentageLimiter maxHeightPercentageToPeak={maxHeightPercentageToPeak}>
                 {barsHeightData.map((barHeight, index) => {
@@ -47,8 +43,8 @@ const DataBarsContainer = styled.div({
     alignItems: 'flex-end',
     width: '100%',
     
-    height: props => props.correctedFullHeight 
-                    ? `${props.correctedFullHeight}%` 
+    height: props => props.highestPossibleHeight 
+                    ? `${props.highestPossibleHeight}%` 
                     : '',
 
     position: 'absolute',

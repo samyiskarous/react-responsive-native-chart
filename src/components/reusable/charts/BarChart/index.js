@@ -1,4 +1,4 @@
-import react from 'react';
+import react, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types'
 import styled from 'styled-components';
 import YAxisInfo from './YAxisInfo';
@@ -6,19 +6,27 @@ import DataBars from './DataBars';
 import XAxisInfo from './XAxisInfo';
 
 const Y_AXIS_VALUES_COUNT = 10;
+/**
+ * This is the area above the highest indicator on the Y Axis. it never changes.
+ * Composed of the fontSize spacing from the indicator and the
+ * downward shifted list of indicators
+ */
+const Y_AXIS_EXTRA_HEIGHT = 30;
 
 const BarChart = (props) => {
     BarChart.propTypes = {
-        labels: PropTypes.arrayOf(PropTypes.shape({
+        labels: PropTypes.shape({
             x: PropTypes.string.isRequired,
             y: PropTypes.string.isRequired
-        })).isRequired,
+        }).isRequired,
         rawBarsData: PropTypes.arrayOf(PropTypes.shape({
             x: PropTypes.string.isRequired,
-            y: PropTypes.string.isRequired
+            y: PropTypes.number.isRequired
         })).isRequired,
         showYAxisValues: PropTypes.bool,
     }
+
+    const [highestPossibleHeight, setHighestPossibleHeight] = useState(0);
 
     const {labels, rawBarsData, showYAxisValues = false} = props;
 
@@ -31,15 +39,25 @@ const BarChart = (props) => {
 
     const computedBarsHeightData = computeBarsHeightFromRawValues(yAxisRawValues);
     
+    // Compute the highest possible height (At the last indicator)
+    const ref = useRef();
+    useEffect(() => {
+        const totalHeightInPixels = ref.current.clientHeight;
+        const chartHeightWithoutExtraSpace = totalHeightInPixels - Y_AXIS_EXTRA_HEIGHT;
+        setHighestPossibleHeight(
+            oldState => (chartHeightWithoutExtraSpace / totalHeightInPixels) * 100
+            )
+    }, []);
+    
     return (
         <>
-            <BarChartGridContainer>
+            <BarChartGridContainer ref={ref}>
                 <YAxisInfo label={labels.y} axisValues={yAxisValues}/>
                 <DataBarsCotainer >
                     <DataBars 
                         barsHeightData={computedBarsHeightData}
                         maxHeightPercentageToPeak={maxPercentageToPeak}
-                        heightPortions={Y_AXIS_VALUES_COUNT+1}
+                        highestPossibleHeight={highestPossibleHeight}
                     />
                 </DataBarsCotainer>
                 <XAxisInfo label={labels.x}/>
@@ -57,8 +75,8 @@ const BarChartGridContainer = styled.div({
     display: 'grid',
     gridAutoFlow: 'row',
 
-    gridTemplateColumns: '5rem minmax(auto,auto)',
-    gridTemplateRows: 'minmax(auto,auto) 4rem',
+    gridTemplateColumns: '5rem auto',
+    gridTemplateRows: 'auto 4rem',
 
     gridTemplateAreas: "'yAxisInfo barCharData' '. xAxisInfo'",
 })
