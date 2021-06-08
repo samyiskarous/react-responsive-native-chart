@@ -19,11 +19,11 @@ const BarChart = (props) => {
         })).isRequired,
         showYAxisValues: PropTypes.bool,
         size: PropTypes.number,
-        shape: PropTypes.string
+        square: PropTypes.bool
     }
 
-    const {labels, rawBarsData, size, shape = 'rectangle', showYAxisValues = false} = props;
-    let chartWidth = shape === 'rectangle' ? `${((size * 2)/16)}` : `${size/16}`; 
+    const {labels, rawBarsData, size, square = false, showYAxisValues = false} = props;
+    let chartWidth = square === false ? `${((size * 2)/16)}` : `${size/16}`; 
     let chartHeight = `${size/16}`;
     
 
@@ -41,8 +41,10 @@ const BarChart = (props) => {
             <BarChartGridContainer 
                 width={chartWidth}
                 gridSections={{
-                    columns: `6rem ${chartWidth-6}rem`,
-                    rows: `fit-content(${chartHeight - 2}rem) 2rem`
+                    // This minus and plus things are to keep the dimensions as specified 
+                    // in the props, if specified 500, then 500 - then 4 or 5 rems
+                    columns: `5rem minmax(${chartWidth-5}rem, auto)`,
+                    rows: `minmax(${chartHeight - 4}rem, auto) 4rem`
                 }}
             >
                 <YAxis label={labels.y} axisValues={yAxisValues}/>

@@ -17,14 +17,21 @@ const XAxis = (props) => {
 
 const XAxisContainer = styled.div({
     gridArea: 'XAxis',
-    display: 'contents'
+    
+    display: 'flex',
+    position: 'relative'
 });
 
 const AxisLabel = styled.span({
     opacity: 0.6,
     letterSpacing: '1rem',
     color: 'gray',
-    fontSize: '24px'
+    fontSize: '24px',
+
+    position: 'absolute',
+
+    top: '-2rem',
+    right: '12rem',
 });
 
 export default XAxis;
