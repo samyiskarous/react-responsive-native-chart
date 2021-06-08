@@ -5,7 +5,7 @@ import YAxisInfo from './YAxisInfo';
 import DataBars from './DataBars';
 import XAxisInfo from './XAxisInfo';
 
-const AXIS_VALUES_COUNT = 7;
+const Y_AXIS_VALUES_COUNT = 10;
 
 const BarChart = (props) => {
     BarChart.propTypes = {
@@ -18,14 +18,9 @@ const BarChart = (props) => {
             y: PropTypes.string.isRequired
         })).isRequired,
         showYAxisValues: PropTypes.bool,
-        size: PropTypes.number,
-        square: PropTypes.bool
     }
 
-    const {labels, rawBarsData, size = 400, square = false, showYAxisValues = false} = props;
-    let chartWidth = square === false ? `${((size * 2)/16)}` : `${size/16}`; 
-    let chartHeight = `${size/16}`;
-    
+    const {labels, rawBarsData, showYAxisValues = false} = props;
 
     const yAxisRawValues = extractAxisRawData(rawBarsData, 'y');
     const maxPercentageToPeak = getPercentageOfHighestNumberToItsCeiledValue(yAxisRawValues)
@@ -38,21 +33,13 @@ const BarChart = (props) => {
     
     return (
         <>
-            <BarChartGridContainer 
-                width={chartWidth}
-                gridSections={{
-                    // This minus and plus things are to keep the dimensions as specified 
-                    // in the props, if specified 500, then 500 - then 4 or 5 rems
-                    columns: `5rem minmax(${chartWidth-5}rem, auto)`,
-                    rows: `minmax(${chartHeight - 4}rem, auto) 4rem`
-                }}
-            >
+            <BarChartGridContainer>
                 <YAxisInfo label={labels.y} axisValues={yAxisValues}/>
                 <DataBarsCotainer >
                     <DataBars 
                         barsHeightData={computedBarsHeightData}
                         maxHeightPercentageToPeak={maxPercentageToPeak}
-                        heightPortions={AXIS_VALUES_COUNT+1}
+                        heightPortions={Y_AXIS_VALUES_COUNT+1}
                     />
                 </DataBarsCotainer>
                 <XAxisInfo label={labels.x}/>
@@ -64,12 +51,15 @@ const BarChart = (props) => {
 
 // START: Styled Components
 const BarChartGridContainer = styled.div({
-    width: props => props.width ? `${props.width}rem` : '',
+    width: '100%',
+    height: '100%',
 
     display: 'grid',
     gridAutoFlow: 'row',
-    gridTemplateColumns: props => props.gridSections ? props.gridSections.columns : '',
-    gridTemplateRows: props => props.gridSections ? props.gridSections.rows : '',
+
+    gridTemplateColumns: '5rem minmax(auto,auto)',
+    gridTemplateRows: 'minmax(auto,auto) 4rem',
+
     gridTemplateAreas: "'yAxisInfo barCharData' '. xAxisInfo'",
 })
 
@@ -111,7 +101,7 @@ const computeAxisValuesFromRawAxisData = (rawAxisData) => {
     let axisValues = [];
 
     const roundedHighestValue = Math.ceil(Math.max(...rawAxisData) / 10) * 10;
-    const incrementBy = roundedHighestValue / AXIS_VALUES_COUNT;
+    const incrementBy = roundedHighestValue / Y_AXIS_VALUES_COUNT;
 
     for(let axisValue = incrementBy; 
             axisValue <= roundedHighestValue; 
