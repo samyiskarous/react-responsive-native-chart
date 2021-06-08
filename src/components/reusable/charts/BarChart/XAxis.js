@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Label } from './YAxis';
 
 const XAxis = (props) => {
 
@@ -8,26 +7,24 @@ const XAxis = (props) => {
 
     return (
         <XAxisContainer>
-            <LabelWrapper>
-                <Label>
-                    {label}
-                </Label>
-            </LabelWrapper>
+            <AxisLabel>
+                {label}
+            </AxisLabel>
         </XAxisContainer>
     );
 }
 
 
 const XAxisContainer = styled.div({
-    width: '100%',
-    height: '20%',
-    position: 'absolute',
+    gridArea: 'XAxis',
+    display: 'contents'
 });
 
-const LabelWrapper = styled.div({
-    height: '100%',
-    position: 'relative',
-    top: '2rem',
-})
+const AxisLabel = styled.span({
+    opacity: 0.6,
+    letterSpacing: '1rem',
+    color: 'gray',
+    fontSize: '24px'
+});
 
 export default XAxis;

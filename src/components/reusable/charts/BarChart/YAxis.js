@@ -7,9 +7,7 @@ const YAxis = (props) => {
 
     return (
         <YAxisContainer>
-            <LabelWrapper>
-                <Label>{label}</Label>
-            </LabelWrapper>
+            <AxisLabel>{label}</AxisLabel>
             <ValuesList>
                 {axisValues.map((value, index) => {
                     return (
@@ -36,15 +34,10 @@ const YAxis = (props) => {
 
 // START: Styled Components
 const YAxisContainer = styled.div({
-    height: '100%',
-    width: '25%',
-    backgroundColor: 'transparent',
-
-    transform: 'translate(-100%)',
-
-    // To start at position 0 on the graph
-    position: 'relative',
-    top: '0.92rem'
+    gridArea: 'yAxis',
+    
+    display: 'flex',
+    justifyContent: 'flex-end',
 });
 
 const ValuesList = styled.ul({
@@ -54,7 +47,12 @@ const ValuesList = styled.ul({
     flexDirection: 'column',
     justifyContent: 'space-between',
     height: '100%',
+    width: 'fit-content',
     margin: 0,
+
+    // To start at position 0 on the graph (Should be up in container)
+    // position: 'relative',
+    // top: '0.92rem',
 });
 
 const ValuesListItem = styled.li({
@@ -73,18 +71,19 @@ const ListItemIndicator = styled.span({
     paddingLeft: '0.7rem'
 })
 
-const LabelWrapper = styled.div({
-    transform: 'rotate(-90deg)',
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    position: 'absolute',
-    bottom: '50%'
-})
-export const Label = styled.span({
-    opacity: 0.3,
+const AxisLabel = styled.span({
+    opacity: 0.6,
+    color: 'gray',
+    fontSize: '24px',
+
+    writingMode: 'vertical-lr',
+    transform: 'rotate(180deg)',
+
     letterSpacing: '1rem',
-    fontSize: '24px'
+
+    position: 'relative',
+    bottom: '12%',
+    right: '1rem',
 });
 // END: Styled Components
 

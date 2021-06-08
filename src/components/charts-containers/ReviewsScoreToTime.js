@@ -77,7 +77,7 @@ const ReviewsScoreToTime = () => {
                         y: 7
                     }
                 ]}
-                size={500}
+                size={300}
             />
         </ReviewScoreToTimeDiv>
     );

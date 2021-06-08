@@ -5,7 +5,7 @@ import YAxis from './YAxis';
 import DataBars from './DataBars';
 import XAxis from './XAxis';
 
-const AXIS_VALUES_COUNT = 14;
+const AXIS_VALUES_COUNT = 7;
 
 const BarChart = (props) => {
     BarChart.propTypes = {
@@ -19,9 +19,13 @@ const BarChart = (props) => {
         })).isRequired,
         showYAxisValues: PropTypes.bool,
         size: PropTypes.number,
+        shape: PropTypes.string
     }
 
-    const {labels, rawBarsData, size, showYAxisValues = false} = props;
+    const {labels, rawBarsData, size, shape = 'rectangle', showYAxisValues = false} = props;
+    let chartWidth = shape === 'rectangle' ? `${((size * 2)/16)}` : `${size/16}`; 
+    let chartHeight = `${size/16}`;
+    
 
     const yAxisRawValues = extractAxisRawData(rawBarsData, 'y');
     const maxPercentageToPeak = getPercentageOfHighestNumberToItsCeiledValue(yAxisRawValues)
@@ -34,23 +38,46 @@ const BarChart = (props) => {
     
     return (
         <>
-            <BarChartContainerDiv size={size}>
+            <BarChartContainer 
+                dimensions={{
+                    width: chartWidth,
+                    height: chartHeight
+                }}
+                gridSections={{
+                    columns: `6rem ${chartWidth-6}rem`,
+                    rows: `${chartHeight - 2}rem 2rem`
+                }}
+            >
                 <YAxis label={labels.y} axisValues={yAxisValues}/>
-                <DataBars 
-                    barsHeightData={computedBarsHeightData}
-                    maxHeightPercentageToPeak={maxPercentageToPeak}
-                    heightPortions={AXIS_VALUES_COUNT+1}
-                />
+                <DataBarsCotainer >
+                    <DataBars 
+                        barsHeightData={computedBarsHeightData}
+                        maxHeightPercentageToPeak={maxPercentageToPeak}
+                        heightPortions={AXIS_VALUES_COUNT+1}
+                    />
+                </DataBarsCotainer>
                 <XAxis label={labels.x}/>
-            </BarChartContainerDiv>
+            </BarChartContainer>
         </>
     );
 }
 
 // START: Styled Components
-const BarChartContainerDiv = styled.div({
+const BarChartContainer = styled.div({
+    width: props => props.dimensions ? `${props.dimensions.width}rem` : '500px',
+
+    display: 'grid',
+    gridAutoFlow: 'row',
+    gridTemplateColumns: props => props.gridSections ? props.gridSections.columns : '',
+    gridTemplateRows: props => props.gridSections ? props.gridSections.rows : '',
+    gridTemplateAreas: "'yAxis barCharData' 'xAxis xAxis'",
+})
+
+const DataBarsCotainer = styled.div({
+    gridArea: 'barCharData',
+    
     height: `fit-content`,
-    width: props => props.size ? `${props.size/16}rem` : '',
+    width: '100%',
     borderLeft: `5px solid black`,
     borderBottom: `5px solid black`,
     borderBottomLeftRadius: 10,
