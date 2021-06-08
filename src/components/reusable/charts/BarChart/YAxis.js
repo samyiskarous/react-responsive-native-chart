@@ -51,8 +51,8 @@ const ValuesList = styled.ul({
     margin: 0,
 
     // To start at position 0 on the graph (Should be up in container)
-    // position: 'relative',
-    // top: '0.92rem',
+    position: 'relative',
+    top: '0.9rem',
 });
 
 const ValuesListItem = styled.li({

@@ -5,7 +5,7 @@ import YAxis from './YAxis';
 import DataBars from './DataBars';
 import XAxis from './XAxis';
 
-const AXIS_VALUES_COUNT = 7;
+const AXIS_VALUES_COUNT = 14;
 
 const BarChart = (props) => {
     BarChart.propTypes = {
@@ -38,14 +38,11 @@ const BarChart = (props) => {
     
     return (
         <>
-            <BarChartContainer 
-                dimensions={{
-                    width: chartWidth,
-                    height: chartHeight
-                }}
+            <BarChartGridContainer 
+                width={chartWidth}
                 gridSections={{
                     columns: `6rem ${chartWidth-6}rem`,
-                    rows: `${chartHeight - 2}rem 2rem`
+                    rows: `fit-content(${chartHeight - 2}rem) 2rem`
                 }}
             >
                 <YAxis label={labels.y} axisValues={yAxisValues}/>
@@ -57,14 +54,15 @@ const BarChart = (props) => {
                     />
                 </DataBarsCotainer>
                 <XAxis label={labels.x}/>
-            </BarChartContainer>
+            </BarChartGridContainer 
+>
         </>
     );
 }
 
 // START: Styled Components
-const BarChartContainer = styled.div({
-    width: props => props.dimensions ? `${props.dimensions.width}rem` : '500px',
+const BarChartGridContainer = styled.div({
+    width: props => props.width ? `${props.width}rem` : '',
 
     display: 'grid',
     gridAutoFlow: 'row',
