@@ -1,9 +1,9 @@
 import react from 'react';
 import PropTypes from 'prop-types'
 import styled from 'styled-components';
-import YAxis from './YAxis';
+import YAxisInfo from './YAxisInfo';
 import DataBars from './DataBars';
-import XAxis from './XAxis';
+import XAxisInfo from './XAxisInfo';
 
 const AXIS_VALUES_COUNT = 7;
 
@@ -47,7 +47,7 @@ const BarChart = (props) => {
                     rows: `minmax(${chartHeight - 4}rem, auto) 4rem`
                 }}
             >
-                <YAxis label={labels.y} axisValues={yAxisValues}/>
+                <YAxisInfo label={labels.y} axisValues={yAxisValues}/>
                 <DataBarsCotainer >
                     <DataBars 
                         barsHeightData={computedBarsHeightData}
@@ -55,7 +55,7 @@ const BarChart = (props) => {
                         heightPortions={AXIS_VALUES_COUNT+1}
                     />
                 </DataBarsCotainer>
-                <XAxis label={labels.x}/>
+                <XAxisInfo label={labels.x}/>
             </BarChartGridContainer 
 >
         </>
@@ -70,7 +70,7 @@ const BarChartGridContainer = styled.div({
     gridAutoFlow: 'row',
     gridTemplateColumns: props => props.gridSections ? props.gridSections.columns : '',
     gridTemplateRows: props => props.gridSections ? props.gridSections.rows : '',
-    gridTemplateAreas: "'yAxis barCharData' 'xAxis xAxis'",
+    gridTemplateAreas: "'yAxisInfo barCharData' '. xAxisInfo'",
 })
 
 const DataBarsCotainer = styled.div({

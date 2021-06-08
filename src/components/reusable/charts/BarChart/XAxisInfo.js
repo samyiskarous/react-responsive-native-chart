@@ -1,34 +1,27 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const XAxis = (props) => {
+const XAxisInfo = (props) => {
 
     const {label} = props;
 
     return (
         <XAxisContainer>
-            <LabelWrapper>
-                <AxisLabel>
-                    {label}
-                </AxisLabel>
-            </LabelWrapper>
+            <AxisLabel>
+                {label}
+            </AxisLabel>
         </XAxisContainer>
     );
 }
 
 
 const XAxisContainer = styled.div({
-    gridArea: 'XAxis',
-    
-    display: 'contents',
-    width: 'inherit',
+    gridArea: 'xAxisInfo',
+
+    display: 'flex',
+    justifyContent: 'center',
 });
 
-const LabelWrapper = styled.div({
-    display: 'flex',
-    width: 'inherit',
-    justifyContent: 'center',
-})
 
 const AxisLabel = styled.span({
     opacity: 0.6,
@@ -38,7 +31,6 @@ const AxisLabel = styled.span({
 
     position: 'relative',
     top: '1.5rem',
-    left: '2rem'
 });
 
-export default XAxis;
+export default XAxisInfo;

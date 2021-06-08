@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const YAxis = (props) => {
+const YAxisInfo = (props) => {
 
     const {label, axisValues} = props;
 
@@ -34,7 +34,7 @@ const YAxis = (props) => {
 
 // START: Styled Components
 const YAxisContainer = styled.div({
-    gridArea: 'yAxis',
+    gridArea: 'yAxisInfo',
     
     display: 'flex',
     justifyContent: 'flex-end',
@@ -88,4 +88,4 @@ const AxisLabel = styled.span({
 });
 // END: Styled Components
 
-export default YAxis;
+export default YAxisInfo;
