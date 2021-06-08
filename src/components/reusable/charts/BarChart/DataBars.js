@@ -99,7 +99,7 @@ const DataBar = styled.div`
 
         }
         cursor: pointer;
-        background-color: gray;
+        background: gray;
     }
     
 `

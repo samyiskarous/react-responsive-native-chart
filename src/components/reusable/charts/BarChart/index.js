@@ -22,7 +22,7 @@ const BarChart = (props) => {
         square: PropTypes.bool
     }
 
-    const {labels, rawBarsData, size, square = false, showYAxisValues = false} = props;
+    const {labels, rawBarsData, size = 400, square = false, showYAxisValues = false} = props;
     let chartWidth = square === false ? `${((size * 2)/16)}` : `${size/16}`; 
     let chartHeight = `${size/16}`;
     

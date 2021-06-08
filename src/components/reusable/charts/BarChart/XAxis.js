@@ -7,9 +7,15 @@ const XAxis = (props) => {
 
     return (
         <XAxisContainer>
-            <AxisLabel>
-                {label}
-            </AxisLabel>
+            <div style={{
+                display: 'flex',
+                width: 'inherit',
+                justifyContent: 'center',
+            }}>
+                <AxisLabel>
+                    {label}
+                </AxisLabel>
+            </div>
         </XAxisContainer>
     );
 }
@@ -18,20 +24,19 @@ const XAxis = (props) => {
 const XAxisContainer = styled.div({
     gridArea: 'XAxis',
     
-    display: 'flex',
-    position: 'relative'
+    display: 'contents',
+    width: 'inherit',
 });
 
 const AxisLabel = styled.span({
     opacity: 0.6,
     letterSpacing: '1rem',
     color: 'gray',
-    fontSize: '24px',
+    fontSize: '1.5em',
 
-    position: 'absolute',
-
-    top: '-2rem',
-    right: '12rem',
+    position: 'relative',
+    top: '1.5rem',
+    left: '2rem'
 });
 
 export default XAxis;

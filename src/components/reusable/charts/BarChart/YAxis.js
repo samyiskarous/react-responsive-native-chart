@@ -50,7 +50,7 @@ const ValuesList = styled.ul({
     width: 'fit-content',
     margin: 0,
 
-    // To start at position 0 on the graph (Should be up in container)
+    // To start at position 0 on the graph
     position: 'relative',
     top: '0.9rem',
     right: '-1px'
@@ -75,7 +75,7 @@ const ListItemIndicator = styled.span({
 const AxisLabel = styled.span({
     opacity: 0.6,
     color: 'gray',
-    fontSize: '24px',
+    fontSize: '1.5em',
 
     writingMode: 'vertical-lr',
     transform: 'rotate(180deg)',
