@@ -76,7 +76,6 @@ const DataBar = styled.div`
 
     margin-left: 0.5rem;
 
-
     &:hover{
         &::before {
             content: ${props => props.rawHeight ? `"${props.rawHeight}"` : 'emptyProp'};

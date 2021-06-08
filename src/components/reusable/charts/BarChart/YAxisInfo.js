@@ -77,7 +77,7 @@ const ListItemIndicator = styled.span({
 const AxisLabel = styled.span({
     opacity: 0.6,
     color: 'gray',
-    fontSize: '1.5em',
+    fontSize: '1em',
 
     writingMode: 'vertical-lr',
     transform: 'rotate(180deg)',

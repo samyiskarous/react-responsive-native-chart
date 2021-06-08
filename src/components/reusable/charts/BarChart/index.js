@@ -83,6 +83,8 @@ const BarChartGridContainer = styled.div({
 
 const DataBarsCotainer = styled.div({
     gridArea: 'barCharData',
+
+    boxSizing: 'border-box',
     
     height: `100%`,
     width: '100%',

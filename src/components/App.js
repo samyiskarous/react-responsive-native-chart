@@ -12,7 +12,7 @@ function App() {
 }
 
 const AppDiv = styled.div`
-  padding: 5rem
+  padding: 2rem
 `;
 
 export default App;

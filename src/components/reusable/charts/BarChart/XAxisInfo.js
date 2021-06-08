@@ -27,7 +27,7 @@ const AxisLabel = styled.span({
     opacity: 0.6,
     letterSpacing: '1rem',
     color: 'gray',
-    fontSize: '1.5em',
+    fontSize: '1em',
 
     position: 'relative',
     top: '1.5rem',

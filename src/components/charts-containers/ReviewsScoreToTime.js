@@ -43,8 +43,8 @@ const ReviewsScoreToTime = () => {
             </DatesRangeDiv>
 
             <div style={{
-                width: '40%',
-                height: '30rem'
+                width: '100%',
+                height: '30rem',
             }}>
                 <BarChart 
                     labels={{
