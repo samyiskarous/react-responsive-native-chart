@@ -11,7 +11,7 @@ const Y_AXIS_VALUES_COUNT = 10;
  * Composed of the fontSize spacing from the indicator and the
  * downward shifted list of indicators
  */
-const Y_AXIS_EXTRA_HEIGHT = 30;
+const Y_AXIS_EXTRA_HEIGHT = 35;
 
 const BarChart = (props) => {
     BarChart.propTypes = {

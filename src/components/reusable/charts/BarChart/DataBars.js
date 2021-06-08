@@ -36,12 +36,13 @@ const DataBars = (props) => {
 
 // START: Styled Components
 const DataBarsContainer = styled.div({
+    width: 'inherit',
+    height: 'inherit',
 
     display: 'flex',
     justifyContent: 'space-between',
     // To start the bars from the bottom
     alignItems: 'flex-end',
-    width: '100%',
     
     height: props => props.highestPossibleHeight 
                     ? `${props.highestPossibleHeight}%` 
@@ -75,9 +76,10 @@ const DataBar = styled.div`
 
     margin-left: 0.5rem;
 
+
     &:hover{
         &::before {
-            content: ${props => props.rawHeight ? `"${props.rawHeight}"` : 'ssssssss'};
+            content: ${props => props.rawHeight ? `"${props.rawHeight}"` : 'emptyProp'};
             position: absolute;
             left: 97%;
             border-top-left-radius: 50%;

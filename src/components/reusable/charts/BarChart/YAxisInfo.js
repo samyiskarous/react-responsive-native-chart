@@ -35,6 +35,8 @@ const YAxisInfo = (props) => {
 // START: Styled Components
 const YAxisContainer = styled.div({
     gridArea: 'yAxisInfo',
+
+    height: 'inherit',
     
     display: 'flex',
     justifyContent: 'flex-end',
