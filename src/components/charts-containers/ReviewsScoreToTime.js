@@ -50,6 +50,58 @@ const ReviewsScoreToTime = () => {
                     },
                     {
                         x: 'Jan',
+                        y: 25
+                    },
+                    {
+                        x: 'Dec',
+                        y: 5
+                    },
+                    {
+                        x: 'Nov',
+                        y: 2
+                    },
+                    {
+                        x: 'Jan',
+                        y: 40
+                    },
+                    {
+                        x: 'Jan',
+                        y: 41
+                    },
+                    {
+                        x: 'Jan',
+                        y: 25
+                    },
+                    {
+                        x: 'Dec',
+                        y: 5
+                    },
+                    {
+                        x: 'Jan',
+                        y: 9
+                    },
+                    {
+                        x: 'Jan',
+                        y: 11
+                    },
+                    {
+                        x: 'Jan',
+                        y: 64
+                    },
+                    {
+                        x: 'Jan',
+                        y: 7
+                    },
+                    {
+                        x: 'Oct',
+                        y: 13
+                    },
+                    {
+                        x: 'Jan',
+                        y: 11
+                    },
+                    {
+                        x: 'Jan',
                         y: 11
                     },
                     {

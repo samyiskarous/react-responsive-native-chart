@@ -5,7 +5,7 @@ import YAxis from './YAxis';
 import DataBars from './DataBars';
 import XAxis from './XAxis';
 
-const AXIS_VALUES_COUNT = 14;
+const AXIS_VALUES_COUNT = 7;
 
 const BarChart = (props) => {
     BarChart.propTypes = {
@@ -74,7 +74,7 @@ const BarChartGridContainer = styled.div({
 const DataBarsCotainer = styled.div({
     gridArea: 'barCharData',
     
-    height: `fit-content`,
+    height: `100%`,
     width: '100%',
     borderLeft: `5px solid black`,
     borderBottom: `5px solid black`,

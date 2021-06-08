@@ -53,6 +53,7 @@ const ValuesList = styled.ul({
     // To start at position 0 on the graph (Should be up in container)
     position: 'relative',
     top: '0.9rem',
+    right: '-1px'
 });
 
 const ValuesListItem = styled.li({
@@ -82,7 +83,7 @@ const AxisLabel = styled.span({
     letterSpacing: '1rem',
 
     position: 'relative',
-    bottom: '12%',
+    bottom: '5%',
     right: '1rem',
 });
 // END: Styled Components

@@ -72,7 +72,7 @@ const HeightPercentageLimiter = styled.div({
 const DataBar = styled.div`
     height: ${props => props.computedHeight ? `${props.computedHeight}%` : '100%'};
     width: 2rem;
-    background-color: #696868;
+    background: linear-gradient(45deg, rgba(2,0,36,1) 0%, rgba(0,0,0,1) 0%, rgba(138,138,138,1) 100%);
     position: relative;
     border-top-right-radius: 0.5rem;
     border-top-left-radius: 0.5rem;
