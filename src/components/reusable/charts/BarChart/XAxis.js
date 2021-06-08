@@ -7,15 +7,11 @@ const XAxis = (props) => {
 
     return (
         <XAxisContainer>
-            <div style={{
-                display: 'flex',
-                width: 'inherit',
-                justifyContent: 'center',
-            }}>
+            <LabelWrapper>
                 <AxisLabel>
                     {label}
                 </AxisLabel>
-            </div>
+            </LabelWrapper>
         </XAxisContainer>
     );
 }
@@ -27,6 +23,12 @@ const XAxisContainer = styled.div({
     display: 'contents',
     width: 'inherit',
 });
+
+const LabelWrapper = styled.div({
+    display: 'flex',
+    width: 'inherit',
+    justifyContent: 'center',
+})
 
 const AxisLabel = styled.span({
     opacity: 0.6,
