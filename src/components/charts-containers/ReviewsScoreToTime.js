@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useMediaQuery } from 'react-responsive';
 import styled from 'styled-components';
+import API from '../../util/api-invocations';
 import BarChart from '../reusable/charts/BarChart';
 
 const ReviewsScoreToTime = () => {
@@ -22,7 +23,6 @@ const ReviewsScoreToTime = () => {
     }
 
     useEffect(() => {
-        console.log('change')
         if(isMobile){
             setCurrentScreenSize('Mobile');
             updateReviewsScorePointsCount(4);
@@ -34,6 +34,25 @@ const ReviewsScoreToTime = () => {
             updateReviewsScorePointsCount(10);
         }
     }, [isMobile, isTablet, isDesktop, setCurrentScreenSize])
+
+    useEffect(() => {
+        let questionsInfo = {};
+        let lineChartData = {}; 
+        API.getReviewsFromDateToDate("2020-01-01", "2020-02-05")
+            .then(reviewsResponse => {
+                lineChartData = reviewsResponse.line_chart_data;
+
+            })
+            .then(() => {
+                API.getQuestionsInfo()
+                .then(questionsResponse => {
+                    questionsInfo = questionsResponse;
+
+                    console.log('reviews', lineChartData)
+                    console.log('questions', questionsInfo);
+                })
+            })        
+    }, []);
    
     return (
         <ReviewScoreToTimeDiv>
@@ -52,7 +71,6 @@ const ReviewsScoreToTime = () => {
                         y: "Score"
                     }}
                     rawBarsData={tempReviewsScoreToTimeBarData}
-                    // size={chartSize}
                 />
             </div>
         </ReviewScoreToTimeDiv>
