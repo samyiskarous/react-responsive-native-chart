@@ -135,7 +135,7 @@ const ReviewsScoreToTime = () => {
         let arrayOfSelectedDatesUnitValues = {};
 
         const integerStartUnit = parseInt(startUnit);
-        for(let unitValue = integerStartUnit; unitValue < endUnit; unitValue++){
+        for(let unitValue = integerStartUnit; unitValue <= endUnit; unitValue++){
             arrayOfSelectedDatesUnitValues[unitValue] = 0;
         }
 
@@ -216,17 +216,21 @@ const ReviewsScoreToTime = () => {
 
                 arrayOfSelectedDatesUnitValues[unitValue] = newAverageScore + oldScore;
             })
+            
             // D- Compress or show the same number of Years/Months/Days as Chart Bars
 
             // E- Map computed data to Valid Chart data
             const mappedChartData = [];
             Object.entries(arrayOfSelectedDatesUnitValues).forEach(unitValueAndScore => {
-                mappedChartData.push({
-                    x: unitValueAndScore[0],
-                    y: unitValueAndScore[1]
-                });
+                // exclude values of 0
+                if(unitValueAndScore[1]){
+                    mappedChartData.push({
+                        x: unitValueAndScore[0],
+                        y: unitValueAndScore[1]
+                    });
+                }
+                    
             });
-            console.log('?????', mappedChartData)
             setChartData(oldChartData => mappedChartData)
         }
         else

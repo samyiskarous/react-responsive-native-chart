@@ -40,7 +40,7 @@ const DataBarsContainer = styled.div({
     height: 'inherit',
 
     display: 'flex',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     // To start the bars from the bottom
     alignItems: 'flex-end',
     
@@ -84,7 +84,7 @@ const DataBar = styled.div`
             border-top-left-radius: 20%;
             border-top-right-radius: 10%;
             border-bottom-right-radius: 10%;
-            width: fit-content;
+            width: 3rem;
             font-size: 14px;
             
             color: gray;
