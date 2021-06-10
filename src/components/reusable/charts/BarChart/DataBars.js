@@ -81,10 +81,10 @@ const DataBar = styled.div`
             content: ${props => props.rawHeight ? `"${props.rawHeight}"` : 'emptyProp'};
             position: absolute;
             left: 97%;
-            border-top-left-radius: 50%;
+            border-top-left-radius: 20%;
             border-top-right-radius: 10%;
             border-bottom-right-radius: 10%;
-            width: 2rem;
+            width: fit-content;
             font-size: 14px;
             
             color: gray;

@@ -13,6 +13,7 @@ const ReviewsScoreToTime = () => {
     const [startDate, setStartDate] = useState(new Date('2020-01-01'));
     const [endDate, setEndDate] = useState(new Date('2020-02-01'));
     const [reviewsRawData, setReviewsRawData] = useState(reviewsInitialState);
+    const [chartData, setChartData] = useState([{x: 0, y: 10}]);
     const [questionsInfo, setQuestionsInfo] = useState(questionsInitialState);
     const [currentScreenSize, setCurrentScreenSize] = useState()
     const [tempReviewsScoreToTimeBarData, setTempReviewsScoreToTimeBarData] = useState([...chartOriginalData]);
@@ -102,49 +103,79 @@ const ReviewsScoreToTime = () => {
         const [startYear, startMonth, startDay] = startDateForAPI.split('-');
         const [endYear, endMonth, endDay] = endDateForAPI.split('-');
 
-        let selectedDatesUnit = "";
+        let selectedDatesUnitType = "";
         let startUnit = 0;
         let endUnit = 0;
 
         if(endYear > startYear){
-            selectedDatesUnit = YEAR;
+            selectedDatesUnitType = YEAR;
 
             startUnit = startYear;
             endUnit = endYear;
         }else if(endMonth > startMonth){
-            selectedDatesUnit = MONTH;
+            selectedDatesUnitType = MONTH;
 
             startUnit = startMonth;
             endUnit = endMonth;
         }else if(endDay > startDay){
-            selectedDatesUnit = DAY;
+            selectedDatesUnitType = DAY;
 
             startUnit = startDay;
             endUnit = endDay;
         }
 
         return {
-            selectedDatesUnit,
+            selectedDatesUnitType,
             startUnit,
             endUnit
         }
     }
 
     const createArrayOfSelectedDatesUnitValues = (startUnit, endUnit) => {
-        let arrayOfSelectedDatesUnitValues = [];
-        console.log(startUnit, endUnit)
+        let arrayOfSelectedDatesUnitValues = {};
 
         const integerStartUnit = parseInt(startUnit);
         for(let unitValue = integerStartUnit; unitValue < endUnit; unitValue++){
-            arrayOfSelectedDatesUnitValues.push({unitValue: unitValue, score: 0})
+            arrayOfSelectedDatesUnitValues[unitValue] = 0;
         }
 
         return arrayOfSelectedDatesUnitValues;
     }
     // END: Selected Dates Units Handlers
 
-    // START: Listeners
+    const getScoreOfQuestionChoice = (questionID, choiceID) => {
+        const questions = questionsInfo.data[0].questions;
+        let scoreOfQuestionChoice;
+        questions.forEach((question) => {
+            if(question.id === questionID){
+                question.choices.forEach((choice) => {
+                    if(choice.id === choiceID){
+                        if(choice.text === 'Bad')
+                            scoreOfQuestionChoice = -1;
 
+                        if(choice.text === 'Neutral')
+                            scoreOfQuestionChoice = 0;
+
+                        if(choice.text === 'Good')
+                            scoreOfQuestionChoice = 1;
+                    }
+                })
+            }
+        })
+
+        return scoreOfQuestionChoice;
+    }
+
+    const getAverageScoreToReview = (questions) => {
+        const scoreOfSecondAnswer = getScoreOfQuestionChoice(questions[1].question, questions[1].choice);
+        const scoreOfFourthAnswer = getScoreOfQuestionChoice(questions[3].question, questions[3].choice);
+
+        const averageScore = (scoreOfSecondAnswer + scoreOfFourthAnswer) / 2;
+
+        return averageScore;
+    }
+
+    // START: Listeners
     useEffect(() => {
         questionsActionCreator.getQuestionsInfo()
             .then(questions => {
@@ -164,10 +195,39 @@ const ReviewsScoreToTime = () => {
     // Listen to new Reviews data from DB (not on first render)
     useEffect(() => {
         if(!firstRender.current){
-            const {selectedDatesUnit, startUnit, endUnit} = getSelectedDatesUnitData();
+            // A- Get Unit Type (Year / Month / Day)
+            const {selectedDatesUnitType, startUnit, endUnit} = getSelectedDatesUnitData();
 
-            const arrayOfSelectedDatesUnitValues = createArrayOfSelectedDatesUnitValues(startUnit, endUnit);
-            console.log(arrayOfSelectedDatesUnitValues)
+            // B- Create array of Objects with score to each, to be incremented later if found
+            let arrayOfSelectedDatesUnitValues = createArrayOfSelectedDatesUnitValues(startUnit, endUnit);
+
+            // C- Start Incrementing the scores according to the data came from DB
+            reviewsRawData.data.map((review, index) => {
+                const {submitted_at, answers} = review;
+                // 1- Get the average of the Score
+                const newAverageScore = getAverageScoreToReview(answers);
+
+                // 2- Get the Unit Value (2012 or 01 ...etc) from the date
+                // selectedDatesUnitType will get use the year/month/day
+                const unitValue = parseInt(submitted_at.split('T')[0].split('-')[selectedDatesUnitType]);
+
+                // 3- Append the score to the arrayOfSelectedDatesUnitValues using the unitValue
+                const oldScore = arrayOfSelectedDatesUnitValues[unitValue];
+
+                arrayOfSelectedDatesUnitValues[unitValue] = newAverageScore + oldScore;
+            })
+            // D- Compress or show the same number of Years/Months/Days as Chart Bars
+
+            // E- Map computed data to Valid Chart data
+            const mappedChartData = [];
+            Object.entries(arrayOfSelectedDatesUnitValues).forEach(unitValueAndScore => {
+                mappedChartData.push({
+                    x: unitValueAndScore[0],
+                    y: unitValueAndScore[1]
+                });
+            });
+            console.log('?????', mappedChartData)
+            setChartData(oldChartData => mappedChartData)
         }
         else
             firstRender.current = false;
@@ -202,10 +262,11 @@ const ReviewsScoreToTime = () => {
                             x: "Time",
                             y: "Score"
                         }}
-                        rawBarsData={tempReviewsScoreToTimeBarData}
+                        rawBarsData={chartData}
                     />
                 </ReviewsChartContainer>
             )}
+
         </ReviewScoreToTimeDiv>
     );
 }
@@ -281,8 +342,8 @@ let chartOriginalData = [
     }
 ];
 
-const YEAR = 'YEAR';
-const MONTH = 'MONTH';
-const DAY = 'DAY';
+const YEAR = 0;
+const MONTH = 1;
+const DAY = 2;
 
 export default ReviewsScoreToTime;
