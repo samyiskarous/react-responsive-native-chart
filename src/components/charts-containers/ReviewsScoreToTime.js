@@ -73,9 +73,8 @@ const ReviewsScoreToTime = () => {
     }
 
     const checkDatesValidityAndGetReviews = () => {
-        // 1- End date should be after start date
+        // End date should be after start date
         const endDataGreaterThanStartDate = endDate > startDate;
-
         if(endDataGreaterThanStartDate === false)
             alert("End Date must be greater than Start Date")
 
@@ -91,6 +90,58 @@ const ReviewsScoreToTime = () => {
                 setReviewsRawData(newReviewsState)
             })
     }
+
+    // START: Selected Dates Units Handlers
+    /**
+     * Unit will be Year/Month/Day
+     */
+    const getSelectedDatesUnitData = () => {        
+        const startDateForAPI = startDate.toISOString().split('T')[0];
+        const endDateForAPI = endDate.toISOString().split('T')[0];
+
+        const [startYear, startMonth, startDay] = startDateForAPI.split('-');
+        const [endYear, endMonth, endDay] = endDateForAPI.split('-');
+
+        let selectedDatesUnit = "";
+        let startUnit = 0;
+        let endUnit = 0;
+
+        if(endYear > startYear){
+            selectedDatesUnit = YEAR;
+
+            startUnit = startYear;
+            endUnit = endYear;
+        }else if(endMonth > startMonth){
+            selectedDatesUnit = MONTH;
+
+            startUnit = startMonth;
+            endUnit = endMonth;
+        }else if(endDay > startDay){
+            selectedDatesUnit = DAY;
+
+            startUnit = startDay;
+            endUnit = endDay;
+        }
+
+        return {
+            selectedDatesUnit,
+            startUnit,
+            endUnit
+        }
+    }
+
+    const createArrayOfSelectedDatesUnitValues = (startUnit, endUnit) => {
+        let arrayOfSelectedDatesUnitValues = [];
+        console.log(startUnit, endUnit)
+
+        const integerStartUnit = parseInt(startUnit);
+        for(let unitValue = integerStartUnit; unitValue < endUnit; unitValue++){
+            arrayOfSelectedDatesUnitValues.push({unitValue: unitValue, score: 0})
+        }
+
+        return arrayOfSelectedDatesUnitValues;
+    }
+    // END: Selected Dates Units Handlers
 
     // START: Listeners
 
@@ -112,8 +163,12 @@ const ReviewsScoreToTime = () => {
 
     // Listen to new Reviews data from DB (not on first render)
     useEffect(() => {
-        if(!firstRender.current)
-            console.log("Start the logic for preparing the data here");
+        if(!firstRender.current){
+            const {selectedDatesUnit, startUnit, endUnit} = getSelectedDatesUnitData();
+
+            const arrayOfSelectedDatesUnitValues = createArrayOfSelectedDatesUnitValues(startUnit, endUnit);
+            console.log(arrayOfSelectedDatesUnitValues)
+        }
         else
             firstRender.current = false;
     }, [reviewsRawData])
@@ -225,5 +280,9 @@ let chartOriginalData = [
         y: 7
     }
 ];
+
+const YEAR = 'YEAR';
+const MONTH = 'MONTH';
+const DAY = 'DAY';
 
 export default ReviewsScoreToTime;
