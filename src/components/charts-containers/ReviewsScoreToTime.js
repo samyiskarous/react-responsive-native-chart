@@ -6,15 +6,19 @@ import { questionsActionCreator } from '../../action-creators/questions-action-c
 import { reviewsInitialState } from '../../reducers/reviews-reducer';
 import { questionsInitialState } from '../../reducers/questions-reducer';
 import BarChart from '../reusable/charts/BarChart';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css"
 
 const ReviewsScoreToTime = () => {
-    const [startDate, setStartData] = useState(new Date());
-    const [endDate, setEndData] = useState(new Date());
-    const [reviewsScoreToTime, setReviewsScoreToTime] = useState(reviewsInitialState);
+    const [startDate, setStartDate] = useState(new Date('2020-01-01'));
+    const [endDate, setEndDate] = useState(new Date('2020-02-01'));
+    const [reviewsRawData, setReviewsRawData] = useState(reviewsInitialState);
     const [questionsInfo, setQuestionsInfo] = useState(questionsInitialState);
     const [currentScreenSize, setCurrentScreenSize] = useState()
     const [tempReviewsScoreToTimeBarData, setTempReviewsScoreToTimeBarData] = useState([...chartOriginalData]);
 
+    const firstRender = useRef(true);
+        
     const isDesktop = useMediaQuery({ minWidth: 992 })
     const isTablet = useMediaQuery({ minWidth: 600, maxWidth: 991 })
     const isMobile = useMediaQuery({ maxWidth: 600 })
@@ -50,37 +54,90 @@ const ReviewsScoreToTime = () => {
     } 
 
     const renderReviewsIfReady = (componentToRender) => {
-        if(reviewsScoreToTime.loading)
+        if(reviewsRawData.loading)
             return <p>Loading Reviews</p>
-        else if(reviewsScoreToTime.error !== null)
+        else if(reviewsRawData.error !== null)
             return <p>There's error in Reviews</p>
-        else if(reviewsScoreToTime.data.length === 0)
+        else if(reviewsRawData.data.length === 0)
             return <p>No reviews found for the selected date.</p>
         else
             return componentToRender
     }
-    const getReviewsHandler = () => {
-        reviewsActionCreator.getReviewsFromDateToDate("2020-01-01", "2020-02-05")
+
+    const updateStartDateHandler = (newDate) => {
+        setStartDate(oldDate => newDate);
+    }
+
+    const updateEndDateHandler = (newDate) => {
+        setEndDate(newDate);
+    }
+
+    const checkDatesValidityAndGetReviews = () => {
+        // 1- End date should be after start date
+        const endDataGreaterThanStartDate = endDate > startDate;
+
+        if(endDataGreaterThanStartDate === false)
+            alert("End Date must be greater than Start Date")
+
+        const startDateForAPI = startDate.toISOString().split('T')[0];
+        const endDateForAPI = endDate.toISOString().split('T')[0];
+
+        getReviewsHandler(startDateForAPI, endDateForAPI);
+    }
+
+    const getReviewsHandler = (startDate, endDate) => {
+        reviewsActionCreator.getReviewsFromDateToDate(startDate, endDate)
             .then(newReviewsState => {
-                
-                setReviewsScoreToTime(oldState => newReviewsState)
+                setReviewsRawData(newReviewsState)
             })
     }
+
+    // START: Listeners
 
     useEffect(() => {
         questionsActionCreator.getQuestionsInfo()
             .then(questions => {
                 setQuestionsInfo(oldState => questions)
-            })        
+            })
+            
     }, []);
 
+    // Listen to Dates changes (not on first render)
+    useEffect(() => {
+        if(!firstRender.current)
+            checkDatesValidityAndGetReviews();
+        else
+            firstRender.current = false;
+    }, [startDate, endDate])
+
+    // Listen to new Reviews data from DB (not on first render)
+    useEffect(() => {
+        if(!firstRender.current)
+            console.log("Start the logic for preparing the data here");
+        else
+            firstRender.current = false;
+    }, [reviewsRawData])
+
+    // END: Listeners
     
     return (
         <ReviewScoreToTimeDiv>
             {renderDatesWhenQuestionsReady(
                 <DatesRangeDiv>
-                    <p onClick={getReviewsHandler}>Start Data</p>
-                    <p>End Data</p>
+                    <span>
+                        Start Date: &nbsp;
+                        <DatePicker 
+                            selected={startDate} 
+                            onChange={updateStartDateHandler}
+                        />
+                    </span>
+                    <span>
+                        End Date: &nbsp;
+                        <DatePicker 
+                            selected={endDate} 
+                            onChange={updateEndDateHandler}
+                        />
+                    </span>
                 </DatesRangeDiv>
             )}
             {renderReviewsIfReady(
@@ -113,7 +170,7 @@ const DatesRangeDiv = styled.div({
     flexDirection: 'row',
     justifyContent: 'space-between',
 
-    width: '30%'
+    width: '70%'
 });
 
 const ReviewsChartContainer = styled.div({
