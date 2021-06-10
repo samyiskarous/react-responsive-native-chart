@@ -1,14 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useMediaQuery } from 'react-responsive';
 import styled from 'styled-components';
-import API from '../../util/api-invocations';
+import { reviewsActionCreator } from '../../action-creators/reviews-action-creator';
+import { questionsActionCreator } from '../../action-creators/questions-action-creator';
+import { reviewsInitialState } from '../../reducers/reviews-reducer';
+import { questionsInitialState } from '../../reducers/questions-reducer';
 import BarChart from '../reusable/charts/BarChart';
 
 const ReviewsScoreToTime = () => {
     const [startDate, setStartData] = useState(new Date());
     const [endDate, setEndData] = useState(new Date());
-    const [reviewsScoreToTimeBarData] = useState([]);
-    const [chartXPoints] = useState(10)
+    const [reviewsScoreToTime, setReviewsScoreToTime] = useState(reviewsInitialState);
+    const [questionsInfo, setQuestionsInfo] = useState(questionsInitialState);
     const [currentScreenSize, setCurrentScreenSize] = useState()
     const [tempReviewsScoreToTimeBarData, setTempReviewsScoreToTimeBarData] = useState([...chartOriginalData]);
 
@@ -35,44 +38,62 @@ const ReviewsScoreToTime = () => {
         }
     }, [isMobile, isTablet, isDesktop, setCurrentScreenSize])
 
-    useEffect(() => {
-        let questionsInfo = {};
-        let lineChartData = {}; 
-        API.getReviewsFromDateToDate("2020-01-01", "2020-02-05")
-            .then(reviewsResponse => {
-                lineChartData = reviewsResponse.line_chart_data;
+    const renderDatesWhenQuestionsReady = (dates) => {
+        if(questionsInfo.loading)
+            return <p>Loading Questions</p>   
+        else if(questionsInfo.error !== null)
+            return <p>There's error in Questions</p>
+        else if(questionsInfo.data.length === 0)
+            return <p>No questions found.</p>
+        else
+            return dates
+    } 
 
+    const renderReviewsIfReady = (componentToRender) => {
+        if(reviewsScoreToTime.loading)
+            return <p>Loading Reviews</p>
+        else if(reviewsScoreToTime.error !== null)
+            return <p>There's error in Reviews</p>
+        else if(reviewsScoreToTime.data.length === 0)
+            return <p>No reviews found for the selected date.</p>
+        else
+            return componentToRender
+    }
+    const getReviewsHandler = () => {
+        reviewsActionCreator.getReviewsFromDateToDate("2020-01-01", "2020-02-05")
+            .then(newReviewsState => {
+                
+                setReviewsScoreToTime(oldState => newReviewsState)
             })
-            .then(() => {
-                API.getQuestionsInfo()
-                .then(questionsResponse => {
-                    questionsInfo = questionsResponse;
+    }
 
-                    console.log('reviews', lineChartData)
-                    console.log('questions', questionsInfo);
-                })
+    useEffect(() => {
+        questionsActionCreator.getQuestionsInfo()
+            .then(questions => {
+                setQuestionsInfo(oldState => questions)
             })        
     }, []);
-   
+
+    
     return (
         <ReviewScoreToTimeDiv>
-            <DatesRangeDiv>
-                <p>Start Data</p>
-                <p>End Data</p>
-            </DatesRangeDiv>
-
-            <div style={{
-                width: '100%',
-                height: '30rem',
-            }}>
-                <BarChart 
-                    labels={{
-                        x: "Time",
-                        y: "Score"
-                    }}
-                    rawBarsData={tempReviewsScoreToTimeBarData}
-                />
-            </div>
+            {renderDatesWhenQuestionsReady(
+                <DatesRangeDiv>
+                    <p onClick={getReviewsHandler}>Start Data</p>
+                    <p>End Data</p>
+                </DatesRangeDiv>
+            )}
+            {renderReviewsIfReady(
+                <ReviewsChartContainer>
+                    <BarChart 
+                        labels={{
+                            x: "Time",
+                            y: "Score"
+                        }}
+                        rawBarsData={tempReviewsScoreToTimeBarData}
+                    />
+                </ReviewsChartContainer>
+            )}
         </ReviewScoreToTimeDiv>
     );
 }
@@ -94,6 +115,11 @@ const DatesRangeDiv = styled.div({
 
     width: '30%'
 });
+
+const ReviewsChartContainer = styled.div({
+    width: '100%',
+    height: '30rem',
+})
 // END: Styled Components
 
 let chartOriginalData = [
