@@ -1,8 +1,8 @@
 # Responsive Native Chart Bar with React, Native CSS & Styled Components
 
-This project was bootstrapped with [Create React App](https:\\github.com\facebook\create-react-app).
+This project was bootstrapped with [Create React App](https:\\github.com\facebook\create-react-app).\
 Implemented by [Samy George Escarous](https:\\github.com\samyiskarous).
-\
+
 
 ### Libraries Used
 For Styling : [Styled Components](https:\\github.com\styled-components\styled-components).\
