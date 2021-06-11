@@ -10,8 +10,8 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css"
 
 const ReviewsScoreToTime = () => {
-    const [startDate, setStartDate] = useState(new Date('2020-01-01'));
-    const [endDate, setEndDate] = useState(new Date('2020-02-01'));
+    const [startDate, setStartDate] = useState();
+    const [endDate, setEndDate] = useState();
     const [reviewsRawData, setReviewsRawData] = useState(reviewsInitialState);
     const [chartData, setChartData] = useState([{x: 0, y: 10}]);
     const [questionsInfo, setQuestionsInfo] = useState(questionsInitialState);
@@ -55,6 +55,8 @@ const ReviewsScoreToTime = () => {
     } 
 
     const renderReviewsIfReady = (componentToRender) => {
+        if(!startDate || !endDate)
+            return <p>Select Both Start Date & End Date</p>
         if(reviewsRawData.loading)
             return <p>Loading Reviews</p>
         else if(reviewsRawData.error !== null)
@@ -74,6 +76,9 @@ const ReviewsScoreToTime = () => {
     }
 
     const checkDatesValidityAndGetReviews = () => {
+        if(!startDate || !endDate)
+            return false
+
         // End date should be after start date
         const endDataGreaterThanStartDate = endDate > startDate;
         if(endDataGreaterThanStartDate === false)
@@ -96,7 +101,11 @@ const ReviewsScoreToTime = () => {
     /**
      * Unit will be Year/Month/Day
      */
-    const getSelectedDatesUnitData = () => {        
+    const getSelectedDatesUnitData = () => {   
+        if(!startDate || !endDate)
+            return false
+        
+            
         const startDateForAPI = startDate.toISOString().split('T')[0];
         const endDateForAPI = endDate.toISOString().split('T')[0];
 
@@ -106,6 +115,7 @@ const ReviewsScoreToTime = () => {
         let selectedDatesUnitType = "";
         let startUnit = 0;
         let endUnit = 0;
+
 
         if(endYear > startYear){
             selectedDatesUnitType = YEAR;
@@ -220,17 +230,19 @@ const ReviewsScoreToTime = () => {
             // D- Compress or show the same number of Years/Months/Days as Chart Bars
 
             // E- Map computed data to Valid Chart data
-            const mappedChartData = [];
+            let mappedChartData = [];
             Object.entries(arrayOfSelectedDatesUnitValues).forEach(unitValueAndScore => {
                 // exclude values of 0
-                if(unitValueAndScore[1]){
+                // if(unitValueAndScore[1] !== 0){
                     mappedChartData.push({
-                        x: unitValueAndScore[0],
+                        x: parseInt(unitValueAndScore[0]),
                         y: unitValueAndScore[1]
                     });
-                }
+                // }
                     
             });
+            console.log(mappedChartData)
+
             setChartData(oldChartData => mappedChartData)
         }
         else
@@ -289,6 +301,7 @@ const DatesRangeDiv = styled.div({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginBottom: '5rem',
 
     width: '70%'
 });

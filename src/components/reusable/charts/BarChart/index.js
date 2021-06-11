@@ -20,7 +20,7 @@ const BarChart = (props) => {
             y: PropTypes.string.isRequired
         }).isRequired,
         rawBarsData: PropTypes.arrayOf(PropTypes.shape({
-            x: PropTypes.string.isRequired,
+            x: PropTypes.number.isRequired,
             y: PropTypes.number.isRequired
         })).isRequired,
         showYAxisValues: PropTypes.bool,
