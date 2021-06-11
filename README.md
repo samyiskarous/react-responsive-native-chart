@@ -10,6 +10,12 @@ For the Date Pickers: [React Datepicker](https:\\www.npmjs.com\package\react-dat
 For Promise-based APIs Handling: [Axios](https:\\github.com\axios\axios).\
 For Responsiveness: [React Responsive](https:\\www.npmjs.com\package\react-responsive).
 
+## Important Note
+If you chose the Start Date from a year, and the End Date from another, then I'll be grouping that into a `Unit` of Years.\
+For example, a Start Date from 2018, and an End Date from 2019, that will result in a 2 Bars in the the BarChart result, each if for one of the years included, which are 2018 and 2019, or more if included.\
+Same goes for the the Months.\
+For example, if within the same year, you chose Start Date at 3rd of January, and the End Date at 5th of May, they we'll have 5 Bars in the chart, which are corresponding to the average scores for Jan, Feb, Mar, April and May.
+
 ## Notes About the project's structure.
 
 `util` Folder contains helpers including an Abstraction for the APIs Invocations.
