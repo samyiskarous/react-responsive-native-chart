@@ -40,7 +40,7 @@ const ReviewsScoreToTime = () => {
 
     const renderDatesWhenQuestionsReady = (dates) => {
         if(questionsInfo.loading)
-            return <p>Loading Questions</p>   
+            return <p>Loading Questions...</p>   
         else if(questionsInfo.error !== null)
             return <p>There's error in Questions</p>
         else if(questionsInfo.data.length === 0)
@@ -53,7 +53,7 @@ const ReviewsScoreToTime = () => {
         if(!startDate || !endDate)
             return <p>Select Both Start Date & End Date</p>
         if(reviewsRawData.loading)
-            return <p>Loading Reviews</p>
+            return <p>Loading Reviews...</p>
         else if(reviewsRawData.error !== null)
             return <p>There's error in Reviews</p>
         else if(reviewsRawData.data.length === 0)
@@ -238,7 +238,6 @@ const ReviewsScoreToTime = () => {
 
                     weightRemaining = weightPerBar; 
                     unitValueGettingFitted = unitValue;
-                    console.log()
                     if(remainingScore > 0){
                         // We are coming from a previous Bar that has remainings
                         weightRemaining -= weightPerBarAfterDecimal;
@@ -335,11 +334,15 @@ const ReviewsScoreToTime = () => {
         const mappedChartData = mapUnitValuesWithScoreToBarChartData(unitValuesWithScoreForCurrentScreen);
 
         setChartData(oldChartData => mappedChartData)
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps 
     }, [currentScreenSize])
     // END: Listeners
     
     return (
         <ReviewScoreToTimeDiv>
+            {/* To avoid racing errors, I made it possible to select dates 
+             only when the questions data are retrieved from the DB*/}
             {renderDatesWhenQuestionsReady(
                 <DatesRangeDiv>
                     <span>
@@ -390,7 +393,7 @@ const DatesRangeDiv = styled.div({
     justifyContent: 'space-between',
     marginBottom: '5rem',
 
-    width: '70%'
+    width: '100%'
 });
 
 const ReviewsChartContainer = styled.div({
@@ -398,53 +401,6 @@ const ReviewsChartContainer = styled.div({
     height: '30rem',
 })
 // END: Styled Components
-
-let chartOriginalData = [
-    {
-        x: 'Oct',
-        y: 20
-    },
-    {
-        x: 'Nov',
-        y: 2
-    },
-    {
-        x: 'Jan',
-        y: 18
-    },
-    {
-        x: 'Jan',
-        y: 9
-    },
-    {
-        x: 'Jan',
-        y: 11
-    },
-    {
-        x: 'Jan',
-        y: 41
-    },
-    {
-        x: 'Jan',
-        y: 7
-    },
-    {
-        x: 'Jan',
-        y: 25
-    },
-    {
-        x: 'Dec',
-        y: 5
-    },
-    {
-        x: 'Jan',
-        y: 64
-    },
-    {
-        x: 'Jan',
-        y: 7
-    }
-];
 
 const YEAR = 0;
 const MONTH = 1;
