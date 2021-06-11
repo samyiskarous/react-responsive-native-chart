@@ -76,7 +76,7 @@ const DataBar = styled.div`
     position: relative;
     border-top-right-radius: 0.5rem;
     border-top-left-radius: 0.5rem;
-    transform: ${props => props.negativeOrZero ? 'rotate(180deg) translate(0%, -130%)' : ''} ;
+    transform: ${props => props.negativeOrZero ? 'rotate(180deg) translate(0%, -140%)' : ''} ;
 
     margin-left: 0.5rem;
 
