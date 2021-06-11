@@ -2,7 +2,7 @@ import { QUESTIONS_ERROR, QUESTIONS_LOADING, QUESTIONS_RECEIVED } from "../actio
 
 export const questionsInitialState = {
     data: [],
-    loading: false,
+    loading: true,
     error: null
 };
 

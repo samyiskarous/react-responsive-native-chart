@@ -1,4 +1,4 @@
-import react, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types'
 import styled from 'styled-components';
 import YAxisInfo from './YAxisInfo';
@@ -28,14 +28,12 @@ const BarChart = (props) => {
 
     const [highestPossibleHeight, setHighestPossibleHeight] = useState(0);
 
-    const {labels, rawBarsData, showYAxisValues = false} = props;
+    const {labels, rawBarsData} = props;
 
     const yAxisRawValues = extractAxisRawData(rawBarsData, 'y');
     const maxPercentageToPeak = getPercentageOfHighestNumberToItsCeiledValue(yAxisRawValues)
 
     const yAxisValues = computeAxisValuesFromRawAxisData(yAxisRawValues);
-
-    const xAxisValues = extractAxisRawData(rawBarsData, 'x');
 
     const computedBarsHeightData = computeBarsHeightFromRawValues(yAxisRawValues);
     

@@ -7,9 +7,6 @@ const REVIEWS_ERROR = 'REVIEWS_ERROR';
 
 export const reviewsActionCreator = {
     getReviewsFromDateToDate: (fromDate, toDate) => {
-        reviewsScoreToTimeReducer({
-            type: REVIEWS_LOADING
-        })
 
         return API.getReviewsFromDateToDate(fromDate, toDate)
             .then(reviewsResponse => {

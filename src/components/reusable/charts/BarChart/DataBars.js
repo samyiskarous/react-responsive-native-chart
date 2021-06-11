@@ -25,7 +25,7 @@ const DataBars = (props) => {
                             key={index} 
                             computedHeight={barHeight.computed}
                             rawHeight={barHeight.raw}
-                            negativeOrZero={barHeight.raw <= 0}
+                            reversed={barHeight.raw <= 0}
                         />
                         );
                     })}
@@ -38,7 +38,6 @@ const DataBars = (props) => {
 // START: Styled Components
 const DataBarsContainer = styled.div({
     width: 'inherit',
-    height: 'inherit',
 
     display: 'flex',
     justifyContent: 'space-around',
@@ -70,13 +69,13 @@ const HeightPercentageLimiter = styled.div({
 // if the height is 0, rotate the the ar to be facing downwards with constant height
 // And with a label of the negative or 0 value
 const DataBar = styled.div`
-    height: ${props => props.negativeOrZero ?  '3.5%' : `${props.computedHeight}%`};
+    height: ${props => props.reversed ?  '3.5%' : `${props.computedHeight}%`};
     width: 2rem;
     background: linear-gradient(45deg, rgba(2,0,36,1) 0%, rgba(0,0,0,1) 0%, rgba(138,138,138,1) 100%);
     position: relative;
     border-top-right-radius: 0.5rem;
     border-top-left-radius: 0.5rem;
-    transform: ${props => props.negativeOrZero ? 'rotate(180deg) translate(0%, -140%)' : ''} ;
+    transform: ${props => props.reversed ? 'rotate(180deg) translate(0%, -135%)' : ''} ;
 
     margin-left: 0.5rem;
 
@@ -85,7 +84,7 @@ const DataBar = styled.div`
             content: ${props => `"${props.rawHeight}"`};
             position: absolute;
             left: 97%;
-            border-top-left-radius: ${props => props.negativeOrZero ? '10%' : '20%'} ;
+            border-top-left-radius: ${props => props.reversed ? '10%' : '20%'} ;
             border-top-right-radius: 10%;
             border-bottom-right-radius: 10%;
             width: 3rem;
@@ -97,7 +96,7 @@ const DataBar = styled.div`
             border: 1px solid gray;
             z-index: 10;
 
-            transform: ${props => props.negativeOrZero ? 'rotate(180deg)' : ''} ;
+            transform: ${props => props.reversed ? 'rotate(180deg)' : ''} ;
         }
         cursor: pointer;
         background: gray;

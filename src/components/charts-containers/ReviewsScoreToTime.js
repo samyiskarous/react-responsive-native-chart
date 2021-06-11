@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useMediaQuery } from 'react-responsive';
 import styled from 'styled-components';
-import { reviewsActionCreator } from '../../action-creators/reviews-action-creator';
+import { reviewsActionCreator, REVIEWS_LOADING } from '../../action-creators/reviews-action-creator';
 import { questionsActionCreator } from '../../action-creators/questions-action-creator';
-import { reviewsInitialState } from '../../reducers/reviews-reducer';
+import { reviewsInitialState, reviewsScoreToTimeReducer } from '../../reducers/reviews-reducer';
 import { questionsInitialState } from '../../reducers/questions-reducer';
 import BarChart from '../reusable/charts/BarChart';
 import DatePicker from 'react-datepicker';
@@ -41,6 +41,7 @@ const ReviewsScoreToTime = () => {
             setCurrentScreenSize('Desktop');
             updateReviewsScorePointsCount(10);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps 
     }, [isMobile, isTablet, isDesktop, setCurrentScreenSize])
 
     const renderDatesWhenQuestionsReady = (dates) => {
@@ -63,8 +64,9 @@ const ReviewsScoreToTime = () => {
             return <p>There's error in Reviews</p>
         else if(reviewsRawData.data.length === 0)
             return <p>No reviews found for the selected date.</p>
-        else
+        else if(chartData.length > 0){
             return componentToRender
+        }
     }
 
     const updateStartDateHandler = (newDate) => {
@@ -91,9 +93,14 @@ const ReviewsScoreToTime = () => {
     }
 
     const getReviewsHandler = (startDate, endDate) => {
+
+        setReviewsRawData(oldRawReviewsState => reviewsScoreToTimeReducer({
+            type: REVIEWS_LOADING
+        }))
+
         reviewsActionCreator.getReviewsFromDateToDate(startDate, endDate)
             .then(newReviewsState => {
-                setReviewsRawData(newReviewsState)
+                setReviewsRawData(oldRawReviewsState => newReviewsState)
             })
     }
 
@@ -141,15 +148,15 @@ const ReviewsScoreToTime = () => {
         }
     }
 
-    const createArrayOfSelectedDatesUnitValues = (startUnit, endUnit) => {
-        let arrayOfSelectedDatesUnitValues = {};
+    const createObjectOfSelectedDatesUnitValues = (startUnit, endUnit) => {
+        let selectedDatesUnitValues = {};
 
         const integerStartUnit = parseInt(startUnit);
         for(let unitValue = integerStartUnit; unitValue <= endUnit; unitValue++){
-            arrayOfSelectedDatesUnitValues[unitValue] = 0;
+            selectedDatesUnitValues[unitValue] = 0;
         }
 
-        return arrayOfSelectedDatesUnitValues;
+        return selectedDatesUnitValues;
     }
     // END: Selected Dates Units Handlers
 
@@ -185,13 +192,54 @@ const ReviewsScoreToTime = () => {
         return averageScore;
     }
 
+    const calculateAverageScoreForUnitValues = (selectedDatesUnitValues, selectedDatesUnitType) => {
+        const selectedDatesUnitValuesWithScore = {...selectedDatesUnitValues};
+        
+        reviewsRawData.data.forEach((review, index) => {
+            const {submitted_at, answers} = review;
+            // 1- Get the average of the Score
+            const newAverageScore = getAverageScoreToReview(answers);
+
+            // 2- Get the Unit Value (2012 or 01 ...etc) from the date
+            // selectedDatesUnitType will get use the year/month/day
+            const unitValue = parseInt(submitted_at.split('T')[0].split('-')[selectedDatesUnitType]);
+
+            // 3- Append the score to the selectedDatesUnitValues using the unitValue
+            const oldScore = selectedDatesUnitValuesWithScore[unitValue];
+
+            selectedDatesUnitValuesWithScore[unitValue] = newAverageScore + oldScore;
+        })
+
+        return selectedDatesUnitValuesWithScore;
+    }
+
+    const prepareRawReviewsDataForBarChart = () => {
+        // A- Get Unit Type (Year / Month / Day)
+        const {selectedDatesUnitType, startUnit, endUnit} = getSelectedDatesUnitData();
+
+        // B- Create array of Objects with score to each, to be incremented later if found
+        let selectedDatesUnitValues = createObjectOfSelectedDatesUnitValues(startUnit, endUnit);
+
+        // // C- Start Incrementing the scores according to the data came from DB
+        let selectedDatesUnitValuesWithScore = calculateAverageScoreForUnitValues(selectedDatesUnitValues, selectedDatesUnitType)
+        
+        // // E- Map computed data to Valid Chart data
+        let mappedChartData = []
+        for (const unitValue in selectedDatesUnitValuesWithScore){
+            mappedChartData.push({
+                x: unitValue,
+                y: parseInt(selectedDatesUnitValuesWithScore[unitValue]),
+            })
+        }
+        setChartData(oldChartData => mappedChartData)
+    }
+
     // START: Listeners
     useEffect(() => {
         questionsActionCreator.getQuestionsInfo()
             .then(questions => {
                 setQuestionsInfo(oldState => questions)
-            })
-            
+            })            
     }, []);
 
     // Listen to Dates changes (not on first render)
@@ -200,54 +248,17 @@ const ReviewsScoreToTime = () => {
             checkDatesValidityAndGetReviews();
         else
             firstRender.current = false;
+            
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps 
     }, [startDate, endDate])
 
-    // Listen to new Reviews data from DB (not on first render)
     useEffect(() => {
-        if(!firstRender.current){
-            // A- Get Unit Type (Year / Month / Day)
-            const {selectedDatesUnitType, startUnit, endUnit} = getSelectedDatesUnitData();
+        if(reviewsRawData.data.length > 0)
+            prepareRawReviewsDataForBarChart();
 
-            // B- Create array of Objects with score to each, to be incremented later if found
-            let arrayOfSelectedDatesUnitValues = createArrayOfSelectedDatesUnitValues(startUnit, endUnit);
-
-            // C- Start Incrementing the scores according to the data came from DB
-            reviewsRawData.data.map((review, index) => {
-                const {submitted_at, answers} = review;
-                // 1- Get the average of the Score
-                const newAverageScore = getAverageScoreToReview(answers);
-
-                // 2- Get the Unit Value (2012 or 01 ...etc) from the date
-                // selectedDatesUnitType will get use the year/month/day
-                const unitValue = parseInt(submitted_at.split('T')[0].split('-')[selectedDatesUnitType]);
-
-                // 3- Append the score to the arrayOfSelectedDatesUnitValues using the unitValue
-                const oldScore = arrayOfSelectedDatesUnitValues[unitValue];
-
-                arrayOfSelectedDatesUnitValues[unitValue] = newAverageScore + oldScore;
-            })
-            
-            // D- Compress or show the same number of Years/Months/Days as Chart Bars
-
-            // E- Map computed data to Valid Chart data
-            let mappedChartData = [];
-            Object.entries(arrayOfSelectedDatesUnitValues).forEach(unitValueAndScore => {
-                // exclude values of 0
-                // if(unitValueAndScore[1] !== 0){
-                    mappedChartData.push({
-                        x: parseInt(unitValueAndScore[0]),
-                        y: unitValueAndScore[1]
-                    });
-                // }
-                    
-            });
-            console.log(mappedChartData)
-
-            setChartData(oldChartData => mappedChartData)
-        }
-        else
-            firstRender.current = false;
-    }, [reviewsRawData])
+        // eslint-disable-next-line react-hooks/exhaustive-deps 
+    }, [reviewsRawData]);
 
     // END: Listeners
     
