@@ -1,4 +1,5 @@
-# Responsive Native ChartBar \ Made with React, Native CSS & Styled Components
+# Responsive Native ChartBar 
+# Made with React.js, Vanilla CSS & Styled Components
 
 This project was bootstrapped with [Create React App](https:\\github.com\facebook\create-react-app).\
 Implemented by [Samy George Escarous](https:\\github.com\samyiskarous).
