@@ -12,11 +12,14 @@ import "react-datepicker/dist/react-datepicker.css"
 const ReviewsScoreToTime = () => {
     const [startDate, setStartDate] = useState();
     const [endDate, setEndDate] = useState();
+    // Raw reviews Data from the DB
     const [reviewsRawData, setReviewsRawData] = useState(reviewsInitialState);
+    // A key-value form for the Units (ex: Jan / Feb ..etc) and their corresponding score
+    const [selectedDatesUnitValuesWithScore, setSelectedDatesUnitValuesWithScore] = useState({});
+    // A Date valid to be sent to the BarChart (ex: [{x: 2012, y: 251}, {x: }...etc])
     const [chartData, setChartData] = useState([{x: 0, y: 10}]);
     const [questionsInfo, setQuestionsInfo] = useState(questionsInitialState);
     const [currentScreenSize, setCurrentScreenSize] = useState()
-    const [tempReviewsScoreToTimeBarData, setTempReviewsScoreToTimeBarData] = useState([...chartOriginalData]);
 
     const firstRender = useRef(true);
         
@@ -24,22 +27,13 @@ const ReviewsScoreToTime = () => {
     const isTablet = useMediaQuery({ minWidth: 600, maxWidth: 991 })
     const isMobile = useMediaQuery({ maxWidth: 600 })
 
-    const updateReviewsScorePointsCount = (pointsCountRequired) => {
-        if(pointsCountRequired !== tempReviewsScoreToTimeBarData.count){
-            setTempReviewsScoreToTimeBarData(chartOriginalData.slice(0, pointsCountRequired));
-        }
-    }
-
     useEffect(() => {
         if(isMobile){
-            setCurrentScreenSize('Mobile');
-            updateReviewsScorePointsCount(4);
+            setCurrentScreenSize(MOBILE);
         }else if(isTablet){
-            setCurrentScreenSize('Tablet');
-            updateReviewsScorePointsCount(6);
+            setCurrentScreenSize(TABLET);
         }else if(isDesktop){
-            setCurrentScreenSize('Desktop');
-            updateReviewsScorePointsCount(10);
+            setCurrentScreenSize(DESKTOP);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps 
     }, [isMobile, isTablet, isDesktop, setCurrentScreenSize])
@@ -213,6 +207,76 @@ const ReviewsScoreToTime = () => {
         return selectedDatesUnitValuesWithScore;
     }
 
+    const mapUnitValuesWithScoreToBarChartData = (selectedDatesUnitValuesWithScore) => {
+        const mappedChartData = [];
+        for (const unitValue in selectedDatesUnitValuesWithScore){
+            mappedChartData.push({
+                x: unitValue,
+                y: parseInt(selectedDatesUnitValuesWithScore[unitValue]),
+            })
+        }
+        return mappedChartData;
+    }
+
+    // default value comes from the state
+    const fitUnitValuesWithScoreForCurrentScreen = (selectedDatesUnitValuesWithScoreParam = selectedDatesUnitValuesWithScore) => {
+        let unitValuesWithScoreForCurrentScreen = {};
+
+        const lengthBeforeFitting = Object.keys(selectedDatesUnitValuesWithScoreParam).length;
+        if(lengthBeforeFitting > currentScreenSize){
+            const weightPerBar = lengthBeforeFitting / currentScreenSize;
+            const weightPerBarAfterDecimal = weightPerBar % 1;
+            let weightRemaining = 0;
+            let unitValueGettingFitted;
+            let remainingScore = 0;
+            
+            for (const unitValue in selectedDatesUnitValuesWithScoreParam){
+                const currentScore = selectedDatesUnitValuesWithScoreParam[unitValue];
+                
+                if(weightRemaining === 0){
+                    // A sign of a new bar
+
+                    weightRemaining = weightPerBar; 
+                    unitValueGettingFitted = unitValue;
+                    console.log()
+                    if(remainingScore > 0){
+                        // We are coming from a previous Bar that has remainings
+                        weightRemaining -= weightPerBarAfterDecimal;
+                    }
+
+                    // The weight remaining is definetly greater than 1.
+                    unitValuesWithScoreForCurrentScreen[unitValueGettingFitted] = currentScore + remainingScore;
+                    weightRemaining -= 1;
+                    remainingScore = 0;
+                }else{
+                    // Existing bar getting fitted
+                    // We'll be incrementing
+                    const oldScore = unitValuesWithScoreForCurrentScreen[unitValueGettingFitted];
+                    if(weightRemaining > 1){
+                        unitValuesWithScoreForCurrentScreen[unitValueGettingFitted] = oldScore + currentScore;
+
+                        weightRemaining -= 1;
+                    }else{
+                        const remainingWeightFromCurrentScore = currentScore * weightRemaining;
+                        unitValuesWithScoreForCurrentScreen[unitValueGettingFitted] = oldScore + remainingWeightFromCurrentScore;
+
+                        remainingScore = currentScore - remainingWeightFromCurrentScore;
+
+                        weightRemaining = 0;
+                    }
+                }
+            }
+        }else{
+            // We either have lower number for UnitValues (chart bars)
+            // Or exactly the same number
+
+            // So just return it as it is;
+            return selectedDatesUnitValuesWithScoreParam;
+        }
+
+        return unitValuesWithScoreForCurrentScreen;
+    }
+
     const prepareRawReviewsDataForBarChart = () => {
         // A- Get Unit Type (Year / Month / Day)
         const {selectedDatesUnitType, startUnit, endUnit} = getSelectedDatesUnitData();
@@ -220,17 +284,18 @@ const ReviewsScoreToTime = () => {
         // B- Create array of Objects with score to each, to be incremented later if found
         let selectedDatesUnitValues = createObjectOfSelectedDatesUnitValues(startUnit, endUnit);
 
-        // // C- Start Incrementing the scores according to the data came from DB
-        let selectedDatesUnitValuesWithScore = calculateAverageScoreForUnitValues(selectedDatesUnitValues, selectedDatesUnitType)
+        // C- Start Incrementing the scores according to the data came from DB
+        const selectedDatesUnitValuesWithScoreConst = calculateAverageScoreForUnitValues(selectedDatesUnitValues, selectedDatesUnitType)
+
+        // to be used later when needed for resizing;
+        setSelectedDatesUnitValuesWithScore(selectedDatesUnitValuesWithScoreConst);
+
+        // D- Fit the UnitValues to be fitting in the 10/6/4 bars, depending on the screen size. 
+        const unitValuesWithScoreForCurrentScreen = fitUnitValuesWithScoreForCurrentScreen(selectedDatesUnitValuesWithScoreConst)
+
+        // E- Map computed data to Valid Chart data
+        const mappedChartData = mapUnitValuesWithScoreToBarChartData(unitValuesWithScoreForCurrentScreen);
         
-        // // E- Map computed data to Valid Chart data
-        let mappedChartData = []
-        for (const unitValue in selectedDatesUnitValuesWithScore){
-            mappedChartData.push({
-                x: unitValue,
-                y: parseInt(selectedDatesUnitValuesWithScore[unitValue]),
-            })
-        }
         setChartData(oldChartData => mappedChartData)
     }
 
@@ -253,6 +318,7 @@ const ReviewsScoreToTime = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps 
     }, [startDate, endDate])
 
+    // Prepare the Chart Date when the Reviews Raw data is ready.
     useEffect(() => {
         if(reviewsRawData.data.length > 0)
             prepareRawReviewsDataForBarChart();
@@ -260,6 +326,16 @@ const ReviewsScoreToTime = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps 
     }, [reviewsRawData]);
 
+    // Re-fit the UnitValuesScores with the corresponding screen size's points (chart bars)
+    useEffect(() => {
+        // Fit the UnitValues to be fitting in the 10/6/4 bars, depending on the screen size. 
+        const unitValuesWithScoreForCurrentScreen = fitUnitValuesWithScoreForCurrentScreen()
+
+        // Map computed data to Valid Chart data
+        const mappedChartData = mapUnitValuesWithScoreToBarChartData(unitValuesWithScoreForCurrentScreen);
+
+        setChartData(oldChartData => mappedChartData)
+    }, [currentScreenSize])
     // END: Listeners
     
     return (
@@ -373,5 +449,9 @@ let chartOriginalData = [
 const YEAR = 0;
 const MONTH = 1;
 const DAY = 2;
+
+const DESKTOP = 10;
+const TABLET = 6;
+const MOBILE = 4;
 
 export default ReviewsScoreToTime;
