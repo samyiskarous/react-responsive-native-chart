@@ -30,7 +30,7 @@ For Responsiveness: [React Responsive](https:\\www.npmjs.com\package\react-respo
 Also regarding the `ReviewScoreToTime` components, You can view the Char Data for Years, Months or Days. All of the three cases will be using the same implementation.\
 \
 `Unit` I have used that Term in many places to partially or fully refer to the Year / Month / Day. All are handeled in the same way, all are considered a Unit.\
-If the difference between the Start and End Date is in Years, then our Unit is Year, same goes for the Month and Day.\
+If the difference between the Start and End Date is in Years (More than 1 year), then our Unit is Year, same goes for the Month and Day.\
 There's a constant value for Each unit of the three (0, 1, 2) that represents its location in the returned `submitted_at` property from the database. (For ex "2012-02-22"), When we split that string in JS, our first index (0) will be the Year, 1 will be for the Month and so on. 
 
 ## Available Scripts
