@@ -8,7 +8,7 @@ Implemented by [Samy George Escarous](https:\\github.com\samyiskarous).
 For Styling : [Styled Components](https:\\github.com\styled-components\styled-components).\
 For the Date Pickers: [React Datepicker](https:\\www.npmjs.com\package\react-datepicker).\
 For Promise-based APIs Handling: [Axios](https:\\github.com\axios\axios).\
-For Responsiveness: [React Responsive](https:\\www.npmjs.com\package\react-responsive).\
+For Responsiveness: [React Responsive](https:\\www.npmjs.com\package\react-responsive).
 
 ## Notes About the project's structure.
 
@@ -21,7 +21,6 @@ For Responsiveness: [React Responsive](https:\\www.npmjs.com\package\react-respo
 \
 `reducers` Folder has a reducer for each State that has multiple statuses (Loading, error...etc), like States that hold APIs' Data. It maintain the predictability of updating that state. All in once place.\
 `action-creators` Folder contains functions responsible for handling the APIs invocations, getting the data, dispatching it to the reducer, and finally return a predictable piece of data to be used as a state. It serves the concept of separation of concerns, where APIs handling is away from our View Components, which makes it cleaner to read.\
-
 
 
 ## Available Scripts
